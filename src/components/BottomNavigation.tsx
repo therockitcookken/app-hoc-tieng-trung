@@ -50,9 +50,9 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-t-[22px] shadow-[0_-6px_25px_rgba(0,0,0,0.07)] border-t border-slate-100/60 pt-2 pb-2 px-1 relative z-20 select-none">
+    <div className="w-full bg-white/95 backdrop-blur-md rounded-t-2xl sm:rounded-2xl shadow-[0_-6px_25px_rgba(0,0,0,0.08)] border-t sm:border border-slate-200/80 pt-2 pb-2 px-2 sm:px-4 sticky sm:fixed bottom-0 left-0 right-0 z-40 select-none max-w-7xl mx-auto my-0 sm:my-2">
       {/* 7 Tabs Row */}
-      <div className="flex items-center justify-around">
+      <div className="flex items-center justify-around max-w-5xl mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive =
@@ -64,14 +64,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
               key={tab.id}
               onClick={() => handleTabClick(tab)}
               type="button"
-              className="flex flex-col items-center justify-center flex-1 py-0.5 group cursor-pointer transition-all duration-150 active:scale-95 relative"
+              className="flex flex-col items-center justify-center flex-1 py-1 group cursor-pointer transition-all duration-150 active:scale-95 relative"
             >
               {/* Icon Container */}
               <div className="relative flex items-center justify-center mb-0.5">
                 <Icon
-                  className={`w-4 h-4 transition-colors duration-200 ${
+                  className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
                     isActive
-                      ? `${tab.colorClass} stroke-[2.2]`
+                      ? `${tab.colorClass} stroke-[2.4]`
                       : 'text-[#8E8E93] stroke-[1.8] group-hover:text-slate-600'
                   }`}
                 />
@@ -79,7 +79,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
               {/* Label */}
               <span
-                className={`text-[8.5px] sm:text-[9px] tracking-tight transition-colors duration-200 ${
+                className={`text-[9px] sm:text-[11px] tracking-tight transition-colors duration-200 ${
                   isActive
                     ? `${tab.colorClass} font-bold`
                     : 'text-[#8E8E93] font-medium group-hover:text-slate-600'
@@ -90,16 +90,16 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
               {/* Small Active Indicator Bar */}
               {isActive && (
-                <div className={`w-3.5 h-0.5 rounded-full mt-0.5 bg-current ${tab.colorClass}`} />
+                <div className={`w-4 sm:w-6 h-0.5 sm:h-1 rounded-full mt-0.5 bg-current ${tab.colorClass}`} />
               )}
             </button>
           );
         })}
       </div>
 
-      {/* iOS Home Indicator Bar */}
-      <div className="w-full flex justify-center pt-1.5 pb-0.5">
-        <div className="w-32 h-1 bg-slate-200 rounded-full" />
+      {/* Mobile iOS Indicator Bar */}
+      <div className="w-full flex justify-center pt-1 pb-0.5 sm:hidden">
+        <div className="w-24 h-1 bg-slate-200 rounded-full" />
       </div>
     </div>
   );

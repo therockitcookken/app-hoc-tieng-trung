@@ -58,8 +58,8 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
     { id: 'tones', label: 'Thanh điệu (5)' },
     { id: 'tongue-diagrams', label: 'Hình lưỡi' },
     { id: 'comparisons', label: 'So sánh âm' },
-    { id: 'exercises', label: 'Bài luyện' },
-    { id: 'factory', label: 'Công xưởng', badge: '30+' },
+    { id: 'exercises', label: 'Luyện tập' },
+    { id: 'factory', label: 'Công xưởng' },
   ];
 
   const handleBack = () => {
@@ -81,30 +81,32 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
   };
 
   return (
-    <div className="w-full max-w-[390px] h-[100vh] sm:h-[844px] bg-[#D92329] sm:rounded-[28px] shadow-[0_25px_60px_-15px_rgba(200,20,20,0.5),0_0_0_1px_rgba(255,255,255,0.15)] flex flex-col justify-between relative overflow-hidden font-sans border-0 sm:border border-white/20">
+    <div className="w-full min-h-screen bg-[#D92329] flex flex-col justify-between relative font-sans overflow-x-hidden">
       {/* Background Decorative Layer */}
       <ChineseBackground />
 
-      {/* Scrollable Viewport */}
-      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col justify-between relative z-10">
+      {/* Responsive Viewport */}
+      <div className="responsive-container py-4 flex-1 flex flex-col justify-between relative z-10">
         <div>
           {/* Header & Status bar */}
           <StatusBar />
           <PronunciationHeader onBack={handleBack} onNotificationClick={handleNotificationClick} />
 
-          {/* Top Progress Card 85% */}
-          <PronunciationProgressCard onDetailClick={() => setIsScoreModalOpen(true)} />
-
-          {/* Search Component */}
-          <div className="px-4 py-1.5">
-            <PronunciationSearch
-              onSelectResult={(type, item) => setDetailData({ type: type as any, item })}
-              showToast={showToast}
-            />
+          {/* Top Progress & Search Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-3">
+            <div className="lg:col-span-2">
+              <PronunciationProgressCard onDetailClick={() => setIsScoreModalOpen(true)} />
+            </div>
+            <div className="lg:col-span-1 flex flex-col justify-center">
+              <PronunciationSearch
+                onSelectResult={(type, item) => setDetailData({ type: type as any, item })}
+                showToast={showToast}
+              />
+            </div>
           </div>
 
-          {/* 10 Horizontal Scrollable Tabs Bar */}
-          <div className="px-4 py-2">
+          {/* Horizontal Scrollable Tabs Bar */}
+          <div className="py-2 mb-2">
             <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
               {tabs.map((t) => {
                 const isActive = activeTab === t.id;
@@ -113,7 +115,7 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
                     type="button"
-                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
+                    className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
                       isActive
                         ? 'bg-white text-[#D92329] shadow-md scale-105'
                         : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'
@@ -121,7 +123,7 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
                   >
                     <span>{t.label}</span>
                     {t.badge && (
-                      <span className="text-[9px] bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full">
+                      <span className="text-[9px] sm:text-[10px] bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full">
                         {t.badge}
                       </span>
                     )}
@@ -132,148 +134,117 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
           </div>
 
           {/* Tab Views Content */}
-
-          {/* 1. Tab Overview (Default) */}
           {activeTab === 'overview' && (
-            <div className="space-y-1">
-              <TodayPracticeCard
-                lesson={currentLesson}
-                onOpenDetailsModal={() => setIsScoreModalOpen(true)}
-                onSeeAllClick={() => setActiveTab('pinyin-chart')}
-              />
-
-              <RecommendedLessons
-                selectedLessonId={currentLesson.id}
-                onSelectLesson={(lessonItem: LessonItem) => {
-                  setCurrentLesson(lessonItem);
-                  showToast?.(`Mở bài học phát âm: ${lessonItem.title}`);
-                }}
-              />
-
-              <div className="px-4 py-1">
-                <FactoryPronunciationSection showToast={showToast} />
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                <div className="lg:col-span-2 space-y-4">
+                  <TodayPracticeCard
+                    lesson={currentLesson}
+                    onOpenDetailsModal={() => setIsScoreModalOpen(true)}
+                  />
+                  <RecommendedLessons selectedLessonId={currentLesson.id} onSelectLesson={(lesson) => setCurrentLesson(lesson)} />
+                </div>
+                <div className="lg:col-span-1 space-y-4">
+                  <PronunciationTipCard />
+                  <CurrentLessonPlayer onContinue={() => setIsScoreModalOpen(true)} />
+                </div>
               </div>
-
-              <PronunciationTipCard />
-
-              <CurrentLessonPlayer
-                onContinue={() => {
-                  showToast?.(`Tiếp tục bài học phát âm: ${currentLesson.char}`);
-                }}
-              />
             </div>
           )}
 
-          {/* 2. Tab Pinyin Chart */}
           {activeTab === 'pinyin-chart' && (
-            <div className="px-4 py-1.5">
-              <FullPinyinChart
-                onSelectSyllable={(syl) => setDetailData({ type: 'syllable', item: syl })}
-                showToast={showToast}
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2">
+                <FullPinyinChart
+                  onSelectSyllable={(s) => setDetailData({ type: 'syllable', item: s })}
+                  showToast={showToast}
+                />
+              </div>
+              <div className="lg:col-span-1">
+                <PronunciationDetailPanel
+                  isOpen={!!detailData}
+                  onClose={() => setDetailData(null)}
+                  data={detailData}
+                  showToast={showToast}
+                />
+              </div>
             </div>
           )}
 
-          {/* 3. Tab Initials (21 Phụ âm) */}
           {activeTab === 'initials' && (
-            <div className="px-4 py-1.5 space-y-3">
-              <div className="bg-white rounded-2xl p-4 shadow-md space-y-3">
-                <h2 className="text-sm font-extrabold text-slate-900 border-b border-slate-100 pb-2">
-                  21 Phụ âm đầu chuẩn tiếng Phổ thông
-                </h2>
-                <div className="grid grid-cols-3 gap-2">
-                  {INITIALS_DATA.map((init) => (
-                    <button
-                      key={init.id}
-                      onClick={() => setDetailData({ type: 'initial', item: init })}
-                      type="button"
-                      className="bg-slate-50 hover:bg-red-50 p-2.5 rounded-xl border border-slate-200 text-center cursor-pointer transition-transform active:scale-95 space-y-0.5"
-                    >
-                      <span className="text-xl font-black text-[#EF3B32] block">{init.symbol}</span>
-                      <span className="text-[10px] text-slate-600 font-bold block truncate">{init.groupName}</span>
-                    </button>
-                  ))}
-                </div>
+            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 border-b pb-2">
+                21 Phụ Âm Đầu (Thanh Mẫu) Hán Ngữ
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+                {INITIALS_DATA.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      handlePlayAudio(item.symbol);
+                      setDetailData({ type: 'initial', item });
+                    }}
+                    type="button"
+                    className="p-3 bg-red-50 hover:bg-red-100 rounded-xl border border-red-200 text-center cursor-pointer transition-all active:scale-95"
+                  >
+                    <span className="text-xl sm:text-2xl font-black text-[#D92329] block">{item.symbol}</span>
+                    <span className="text-[11px] text-slate-600 font-medium block mt-1">{item.groupName}</span>
+                  </button>
+                ))}
               </div>
             </div>
           )}
 
-          {/* 4. Tab Finals (Vận mẫu) */}
           {activeTab === 'finals' && (
-            <div className="px-4 py-1.5 space-y-3">
-              <div className="bg-white rounded-2xl p-4 shadow-md space-y-3">
-                <h2 className="text-sm font-extrabold text-slate-900 border-b border-slate-100 pb-2">
-                  Các nhóm Vận mẫu chuẩn
-                </h2>
-                <div className="grid grid-cols-3 gap-2">
-                  {FINALS_DATA.map((fin) => (
-                    <button
-                      key={fin.id}
-                      onClick={() => setDetailData({ type: 'final', item: fin })}
-                      type="button"
-                      className="bg-slate-50 hover:bg-blue-50 p-2.5 rounded-xl border border-slate-200 text-center cursor-pointer transition-transform active:scale-95 space-y-0.5"
-                    >
-                      <span className="text-xl font-black text-blue-600 block">{fin.symbol}</span>
-                      <span className="text-[10px] text-slate-600 font-bold block truncate">{fin.categoryName}</span>
-                    </button>
-                  ))}
-                </div>
+            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 border-b pb-2">
+                Vận Mẫu (Nguyên Âm & Âm Cuối)
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                {FINALS_DATA.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      handlePlayAudio(item.symbol);
+                      setDetailData({ type: 'final', item });
+                    }}
+                    type="button"
+                    className="p-3 bg-emerald-50 hover:bg-emerald-100 rounded-xl border border-emerald-200 text-center cursor-pointer transition-all active:scale-95"
+                  >
+                    <span className="text-xl sm:text-2xl font-black text-emerald-800 block">{item.symbol}</span>
+                    <span className="text-[11px] text-slate-600 font-medium block mt-1">{item.vietnameseApprox}</span>
+                  </button>
+                ))}
               </div>
             </div>
           )}
 
-          {/* 5. Tab Tones (5 Thanh điệu) */}
           {activeTab === 'tones' && (
-            <div className="px-4 py-1.5 space-y-3.5">
-              {/* Tones List */}
-              <div className="bg-white rounded-2xl p-4 shadow-md space-y-3">
-                <h2 className="text-sm font-extrabold text-slate-900 border-b border-slate-100 pb-2">
-                  5 Thanh điệu Tiếng Trung Phổ thông
-                </h2>
-                <div className="space-y-3">
-                  {MANDARIN_TONES.map((tone) => (
-                    <div key={tone.toneNumber} className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-black text-[#EF3B32]">{tone.name}</span>
-                        <button
-                          onClick={() => handlePlayAudio(tone.examples[0]?.audioText || tone.symbolExample)}
-                          type="button"
-                          className="bg-red-50 text-[#EF3B32] p-1.5 rounded-full hover:bg-red-100 cursor-pointer"
-                        >
-                          <StatusBar />
-                        </button>
-                      </div>
-                      <p className="text-xs text-slate-700 font-medium">{tone.description}</p>
-                      <div className="text-[11px] text-slate-500 font-bold">
-                        💡 Hướng dẫn: {tone.vietnameseGuide}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 border-b pb-2">
+                5 Thanh Điệu & Quy Tắc Biến Điệu
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                {MANDARIN_TONES.map((tone) => (
+                  <div key={tone.toneNumber} className="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-1">
+                    <span className="text-xs font-extrabold text-amber-900 bg-amber-200 px-2 py-0.5 rounded-md">
+                      Thanh {tone.toneNumber}
+                    </span>
+                    <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mt-1">{tone.name}</h3>
+                    <p className="text-xs text-slate-700">{tone.pitchContour}</p>
+                    <p className="text-[11px] text-slate-600 italic">Ví dụ: {tone.examples[0]?.chinese} ({tone.examples[0]?.pinyin})</p>
+                  </div>
+                ))}
               </div>
 
-              {/* Sandhi Rules */}
-              <div className="bg-white rounded-2xl p-4 shadow-md space-y-3">
-                <h2 className="text-sm font-extrabold text-slate-900 border-b border-slate-100 pb-2">
-                  Quy tắc Biến điệu quan trọng
-                </h2>
-                <div className="space-y-2.5">
+              <div className="mt-4 pt-4 border-t">
+                <h3 className="text-sm font-extrabold text-slate-900 mb-2">💡 Quy tắc Biến điệu Tiếng Trung</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {TONE_SANDHI_RULES.map((rule) => (
-                    <div key={rule.id} className="bg-amber-50 p-3 rounded-xl border border-amber-200 space-y-1">
-                      <span className="text-xs font-extrabold text-amber-900 block">{rule.title}</span>
-                      <p className="text-[11px] text-slate-700">{rule.explanation}</p>
-                      <div className="flex items-center space-x-2 pt-1">
-                        {rule.examples.map((ex, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => handlePlayAudio(ex.audioText)}
-                            type="button"
-                            className="bg-white border border-amber-300 px-2.5 py-1 rounded-lg text-xs font-bold text-amber-900 hover:bg-amber-100 cursor-pointer"
-                          >
-                            {ex.chinese} ({ex.actualPinyin})
-                          </button>
-                        ))}
-                      </div>
+                    <div key={rule.id} className="bg-slate-50 p-3 rounded-xl border text-xs space-y-1">
+                      <span className="font-bold text-red-700">{rule.title}</span>
+                      <p className="text-slate-700">{rule.explanation}</p>
+                      <p className="text-emerald-700 font-semibold">{rule.examples[0]?.chinese} ({rule.examples[0]?.actualPinyin})</p>
                     </div>
                   ))}
                 </div>
@@ -281,57 +252,46 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
             </div>
           )}
 
-          {/* 6. Tab Tongue Diagrams (Hình lưỡi cấu âm) */}
           {activeTab === 'tongue-diagrams' && (
-            <div className="px-4 py-1.5 space-y-3">
-              <TonguePositionDiagram diagramId="diagram-bilabial-asp" title="Mô phỏng 1: Hai môi bật hơi mạnh (p)" />
-              <TonguePositionDiagram diagramId="diagram-retroflex-asp" title="Mô phỏng 2: Cong lưỡi bật hơi (ch)" />
-              <TonguePositionDiagram diagramId="diagram-palatal-fricative" title="Mô phỏng 3: Mặt lưỡi dẹt (x)" />
-              <TonguePositionDiagram diagramId="diagram-velar-asp" title="Mô phỏng 4: Gốc lưỡi bật hơi (k)" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2">
+                <TonguePositionDiagram diagramId="diagram-bilabial-unasp" />
+              </div>
+              <div className="lg:col-span-1">
+                <PronunciationTipCard />
+              </div>
             </div>
           )}
 
-          {/* 7. Tab Comparisons (So sánh cặp âm dễ nhầm) */}
           {activeTab === 'comparisons' && (
-            <div className="px-4 py-1.5">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md">
               <PronunciationComparison showToast={showToast} />
             </div>
           )}
 
-          {/* 8. Tab Exercises (Bài tập luyện phát âm) */}
           {activeTab === 'exercises' && (
-            <div className="px-4 py-1.5">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md">
               <PronunciationExercise showToast={showToast} />
             </div>
           )}
 
-          {/* 9. Tab Factory (Phát âm công xưởng) */}
           {activeTab === 'factory' && (
-            <div className="px-4 py-1.5">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md">
               <FactoryPronunciationSection showToast={showToast} />
             </div>
           )}
         </div>
 
-        {/* Bottom spacing */}
-        <div className="h-3" />
+        <div className="h-4" />
       </div>
 
-      {/* Bottom Navigation with 'pronunciation' active */}
+      {/* Bottom Navigation */}
       <BottomNavigation activeTab="pronunciation" />
 
-      {/* Detailed Score Analysis Modal */}
+      {/* Score Modal */}
       <PronunciationDetailsModal
         isOpen={isScoreModalOpen}
         onClose={() => setIsScoreModalOpen(false)}
-      />
-
-      {/* Detail Panel Sheet */}
-      <PronunciationDetailPanel
-        isOpen={!!detailData}
-        onClose={() => setDetailData(null)}
-        data={detailData}
-        showToast={showToast}
       />
     </div>
   );

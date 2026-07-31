@@ -44,27 +44,36 @@ export const HomePage: React.FC<HomePageProps> = ({ showToast }) => {
   };
 
   return (
-    <div className="w-full max-w-[390px] h-[100vh] sm:h-[844px] bg-[#D92329] sm:rounded-[28px] shadow-[0_25px_60px_-15px_rgba(200,20,20,0.5),0_0_0_1px_rgba(255,255,255,0.15)] flex flex-col justify-between relative overflow-hidden font-sans border-0 sm:border border-white/20">
+    <div className="w-full min-h-screen bg-[#D92329] flex flex-col justify-between relative font-sans overflow-x-hidden">
       {/* Background Decorative Layer */}
       <ChineseBackground />
 
-      {/* Scrollable Content Viewport */}
-      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col justify-between relative z-10">
-        
-        {/* Top Header Region */}
+      {/* Responsive Content Viewport */}
+      <div className="responsive-container py-4 flex-1 flex flex-col justify-between relative z-10">
         <div>
           <StatusBar />
           <WelcomeHeader onNotificationClick={handleNotificationClick} />
 
-          {/* Tab view conditional or default home view */}
           {activeTab === 'home' ? (
-            <>
-              <LearningProgressCard onDetailClick={handleDetailClick} />
-              <FeatureGrid onSelectFeature={handleFeatureClick} />
-              <StreakRewardSection />
-            </>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                <div className="lg:col-span-2">
+                  <LearningProgressCard onDetailClick={handleDetailClick} />
+                </div>
+                <div className="lg:col-span-1">
+                  <StreakRewardSection />
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <h2 className="text-white text-base sm:text-lg font-black px-1 mb-2">
+                  Chức Năng Học Tập Cốt Lõi
+                </h2>
+                <FeatureGrid onSelectFeature={handleFeatureClick} />
+              </div>
+            </div>
           ) : (
-            <div className="px-5 py-8 text-center text-white space-y-4">
+            <div className="px-5 py-8 text-center text-white space-y-4 max-w-xl mx-auto">
               <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md mx-auto flex items-center justify-center border border-white/20">
                 <CheckCircle2 className="w-8 h-8 text-amber-300" />
               </div>
@@ -85,8 +94,7 @@ export const HomePage: React.FC<HomePageProps> = ({ showToast }) => {
           )}
         </div>
 
-        {/* Bottom spacing before Nav bar */}
-        <div className="h-3" />
+        <div className="h-4" />
       </div>
 
       {/* Sticky Bottom Navigation Bar */}
@@ -113,8 +121,8 @@ export const HomePage: React.FC<HomePageProps> = ({ showToast }) => {
 
       {/* Feature Interactive Modal */}
       {activeModal && (
-        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-6 animate-fade-in">
-          <div className="bg-white rounded-2xl p-5 w-full max-w-[320px] shadow-2xl text-center space-y-3 relative border border-red-100">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl text-center space-y-4 relative border border-red-100">
             <button
               onClick={() => setActiveModal(null)}
               type="button"
@@ -126,13 +134,13 @@ export const HomePage: React.FC<HomePageProps> = ({ showToast }) => {
               <Sparkles className="w-6 h-6" />
             </div>
             <h4 className="text-base font-bold text-slate-900">Thông báo</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               {activeModal}
             </p>
             <button
               onClick={() => setActiveModal(null)}
               type="button"
-              className="w-full bg-gradient-to-r from-[#EF3B32] to-[#D92329] text-white text-xs font-bold py-2.5 rounded-xl shadow-md active:scale-95 transition-transform cursor-pointer"
+              className="w-full bg-gradient-to-r from-[#EF3B32] to-[#D92329] text-white text-xs sm:text-sm font-bold py-2.5 rounded-xl shadow-md active:scale-95 transition-transform cursor-pointer"
             >
               Bắt đầu trải nghiệm
             </button>

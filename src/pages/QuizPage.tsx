@@ -33,9 +33,6 @@ export const QuizPage: React.FC<QuizPageProps> = ({ showToast }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<QuizTab>('overview');
   const [activeSessionQuestions, setActiveSessionQuestions] = useState<QuizQuestion[] | null>(null);
-  const [activeSessionTitle, setActiveSessionTitle] = useState<string>('');
-  const [wrongQuestionsQueue, setWrongQuestionsQueue] = useState<QuizQuestion[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
 
   const tabs: { id: QuizTab; label: string; badge?: string }[] = [
     { id: 'overview', label: 'Tổng quan' },
@@ -58,182 +55,179 @@ export const QuizPage: React.FC<QuizPageProps> = ({ showToast }) => {
 
     if (collectionId === 'coll-factory-safety') {
       qList = QUIZ_QUESTIONS_DATA.filter((q) => q.isFactoryQuestion || q.category === 'Công xưởng & Nhà máy');
-    } else if (collectionId === 'coll-grammar-hsk3') {
+    } else if (collectionId === 'coll-grammar-particles') {
       qList = QUIZ_QUESTIONS_DATA.filter((q) => q.category === 'Ngữ pháp');
+    } else if (collectionId === 'coll-hsk1-2-core') {
+      qList = QUIZ_QUESTIONS_DATA.filter((q) => q.hskLevel === 'HSK 1' || q.hskLevel === 'HSK 2');
     }
 
-    const coll = QUIZ_COLLECTIONS_DATA.find((c) => c.id === collectionId);
-    setActiveSessionTitle(coll?.title || 'Bài Quiz Kiểm Tra');
-    setActiveSessionQuestions(qList.length > 0 ? qList : QUIZ_QUESTIONS_DATA);
-    showToast?.(`Bắt đầu bài Quiz: ${coll?.title || 'Kiểm tra'}`);
-  };
+    if (qList.length === 0) qList = QUIZ_QUESTIONS_DATA;
 
-  const handleFinishQuiz = (_score: number, _totalXp: number, wrongCount: number) => {
-    if (wrongCount > 0 && activeSessionQuestions) {
-      setWrongQuestionsQueue(activeSessionQuestions);
-    }
+    setActiveSessionQuestions(qList);
   };
 
   return (
-    <div className="w-full max-w-[390px] h-[100vh] sm:h-[844px] bg-[#00A86B] sm:rounded-[28px] shadow-[0_25px_60px_-15px_rgba(0,168,107,0.5),0_0_0_1px_rgba(255,255,255,0.15)] flex flex-col justify-between relative overflow-hidden font-sans border-0 sm:border border-white/20 select-none">
-      {/* Background Layer Green Variant */}
-      <ChineseBackground variant="green" />
+    <div className="w-full min-h-screen bg-[#E65100] flex flex-col justify-between relative font-sans overflow-x-hidden">
+      {/* Background Layer Orange Variant */}
+      <ChineseBackground variant="orange" />
 
-      {/* Scrollable Viewport */}
-      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col justify-between relative z-10">
+      {/* Responsive Viewport */}
+      <div className="responsive-container py-4 flex-1 flex flex-col justify-between relative z-10">
         <div>
           {/* Header & Status bar */}
           <StatusBar />
           <QuizHeader onBack={handleBack} />
 
-          {/* Progress Card */}
-          <QuizProgressCard onDetailClick={() => showToast?.('Xem chi tiết tiến độ Quiz')} />
-
-          {/* 12 Horizontal Scrollable Tabs Bar */}
-          <div className="px-4 py-2">
-            <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
-              {tabs.map((t) => {
-                const isActive = activeTab === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => setActiveTab(t.id)}
-                    type="button"
-                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
-                      isActive
-                        ? 'bg-white text-[#00A86B] shadow-md scale-105'
-                        : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'
-                    }`}
-                  >
-                    <span>{t.label}</span>
-                    {t.badge && (
-                      <span className="text-[9px] bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full">
-                        {t.badge}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Active Interactive Quiz Session Runner */}
+          {/* Active Session Runner View */}
           {activeSessionQuestions ? (
-            <div className="px-4 py-1.5">
+            <div className="py-2 max-w-4xl mx-auto">
               <QuizSessionPlayer
+                collectionTitle="Bài Trắc Nghiệm Ôn Tập"
                 questions={activeSessionQuestions}
-                collectionTitle={activeSessionTitle}
-                onFinish={handleFinishQuiz}
+                onFinish={() => {
+                  setActiveSessionQuestions(null);
+                }}
                 onClose={() => setActiveSessionQuestions(null)}
                 showToast={showToast}
               />
             </div>
           ) : (
-            /* Tab Views Content */
-            <>
-              {/* 1. Tab Overview (Default) */}
-              {activeTab === 'overview' && (
-                <div className="space-y-2">
-                  <QuizCategories
-                    activeCategory={selectedCategoryId}
-                    onSelectCategory={(catId) => {
-                      setSelectedCategoryId(catId);
-                      showToast?.(`Đã chọn danh mục Quiz: ${catId}`);
+            <div>
+              {/* Progress & Challenge Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-3">
+                <div className="lg:col-span-2">
+                  <QuizProgressCard
+                    onDetailClick={() => showToast?.('Chi tiết tiến độ Trắc nghiệm')}
+                  />
+                </div>
+                <div className="lg:col-span-1 flex flex-col justify-center bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-white space-y-2">
+                  <h3 className="font-bold text-sm">🔥 Thử Thách Hàng Ngày</h3>
+                  <p className="text-xs text-white/80">Hoàn thành 10 câu trắc nghiệm để nhận 50 điểm XP & mở khóa huy hiệu!</p>
+                  <button
+                    onClick={() => {
+                      setActiveSessionQuestions(QUIZ_QUESTIONS_DATA);
                     }}
+                    type="button"
+                    className="w-full bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-xs py-2.5 rounded-xl shadow-md cursor-pointer active:scale-95 transition-transform"
+                  >
+                    Bắt đầu thử thách ngay
+                  </button>
+                </div>
+              </div>
+
+              {/* Horizontal Scrollable Tabs Bar */}
+              <div className="py-2 mb-3">
+                <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
+                  {tabs.map((t) => {
+                    const isActive = activeTab === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => setActiveTab(t.id)}
+                        type="button"
+                        className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
+                          isActive
+                            ? 'bg-white text-[#E65100] shadow-md scale-105'
+                            : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'
+                        }`}
+                      >
+                        <span>{t.label}</span>
+                        {t.badge && (
+                          <span className="text-[9px] sm:text-[10px] bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full">
+                            {t.badge}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Tab Content Views */}
+              {activeTab === 'overview' && (
+                <div className="space-y-4">
+                  <QuizCategories
+                    activeCategory="all"
+                    onSelectCategory={() => {}}
                   />
 
-                  {/* Preset Collection Cards List */}
-                  <div className="px-4 py-1.5 space-y-2">
-                    {QUIZ_COLLECTIONS_DATA.map((coll) => (
-                      <div
-                        key={coll.id}
-                        className="bg-white rounded-2xl p-3.5 shadow-md border border-slate-100 space-y-2 flex items-center justify-between"
-                      >
-                        <div>
-                          <span className="text-[9.5px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                            {coll.category} • {coll.totalQuestions} Câu
-                          </span>
-                          <h3 className="text-sm font-extrabold text-slate-900 mt-1">
-                            {coll.title}
-                          </h3>
-                          <p className="text-[10.5px] text-slate-500 font-medium">
-                            {coll.description}
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={() => handleStartCollection(coll.id)}
-                          type="button"
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-xs cursor-pointer active:scale-95 transition-transform flex-shrink-0"
+                  {/* Collections Grid */}
+                  <div className="space-y-2">
+                    <h2 className="text-white text-base sm:text-lg font-black px-1">Bộ Đề Trắc Nghiệm Nổi Bật</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {QUIZ_COLLECTIONS_DATA.map((col) => (
+                        <div
+                          key={col.id}
+                          className="bg-white rounded-2xl p-4 shadow-md space-y-3 border border-amber-100 hover:shadow-lg transition-shadow"
                         >
-                          Bắt đầu
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-
-                  {wrongQuestionsQueue.length > 0 && (
-                    <div className="px-4 py-1">
-                      <WrongAnswerReview
-                        wrongQuestions={wrongQuestionsQueue}
-                        onRetake={() => handleStartCollection('coll-daily-challenge')}
-                        showToast={showToast}
-                      />
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+                              {col.category}
+                            </span>
+                            <span className="text-xs text-slate-500 font-bold">{col.totalQuestions} câu</span>
+                          </div>
+                          <h3 className="text-sm sm:text-base font-extrabold text-slate-900">{col.title}</h3>
+                          <p className="text-xs text-slate-600 line-clamp-2">{col.description}</p>
+                          <button
+                            onClick={() => handleStartCollection(col.id)}
+                            type="button"
+                            className="w-full bg-[#E65100] hover:bg-[#D84315] text-white font-bold text-xs py-2.5 rounded-xl shadow-xs cursor-pointer active:scale-95 transition-transform flex items-center justify-center space-x-1"
+                          >
+                            <Briefcase className="w-4 h-4" />
+                            <span>Vào làm bài ngay</span>
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
-              )}
-
-              {/* 2. Tab Factory (Công xưởng) */}
-              {activeTab === 'factory' && (
-                <div className="px-4 py-1.5 space-y-3">
-                  <div className="bg-white rounded-2xl p-4 shadow-md space-y-3">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <div className="flex items-center space-x-1.5">
-                        <Briefcase className="w-4 h-4 text-orange-600" />
-                        <h2 className="text-sm font-extrabold text-slate-900">
-                          Quiz Công xưởng & An toàn Lao động
-                        </h2>
-                      </div>
-                      <span className="text-[10px] bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full font-bold">
-                        800+ Câu thực tế
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-slate-600 font-medium">
-                      Kiểm tra phản xạ ngôn ngữ trong các tình huống vận hành máy móc, sự cố, bảo hộ an toàn và KCS.
-                    </p>
-
-                    <button
-                      onClick={() => handleStartCollection('coll-factory-safety')}
-                      type="button"
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl text-xs font-bold shadow-md cursor-pointer active:scale-95 transition-transform"
-                    >
-                      Bắt đầu Quiz Công xưởng (10 Câu)
-                    </button>
                   </div>
                 </div>
               )}
 
-              {/* 3. Tab Wrong (Câu sai cần ôn) */}
               {activeTab === 'wrong' && (
-                <div className="px-4 py-1.5">
+                <div className="py-1">
                   <WrongAnswerReview
-                    wrongQuestions={wrongQuestionsQueue}
-                    onRetake={() => handleStartCollection('coll-daily-challenge')}
+                    wrongQuestions={QUIZ_QUESTIONS_DATA.slice(0, 3)}
+                    onRetake={() => {
+                      setActiveSessionQuestions(QUIZ_QUESTIONS_DATA.slice(0, 3));
+                    }}
                     showToast={showToast}
                   />
                 </div>
               )}
-            </>
+
+              {activeTab !== 'overview' && activeTab !== 'wrong' && (
+                <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
+                  <h2 className="text-base sm:text-lg font-black text-slate-900 border-b pb-2">
+                    Bộ Đề Kiểm Tra - {tabs.find((t) => t.id === activeTab)?.label}
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {QUIZ_COLLECTIONS_DATA.slice(0, 6).map((col) => (
+                      <div key={col.id} className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                        <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
+                          {col.category}
+                        </span>
+                        <h3 className="text-sm font-extrabold text-slate-900">{col.title}</h3>
+                        <p className="text-xs text-slate-600">{col.description}</p>
+                        <button
+                          onClick={() => handleStartCollection(col.id)}
+                          type="button"
+                          className="w-full bg-[#E65100] text-white text-xs font-bold py-2 rounded-xl"
+                        >
+                          Làm bộ đề này
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
-        {/* Bottom spacing */}
-        <div className="h-3" />
+        <div className="h-4" />
       </div>
 
-      {/* Bottom Navigation with 'quiz' active */}
+      {/* Bottom Navigation */}
       <BottomNavigation activeTab="quiz" />
     </div>
   );

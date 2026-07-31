@@ -8,12 +8,19 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  html, body, #root {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
   body {
     background-color: #0f172a;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1e293b;
-    margin: 0;
-    padding: 0;
   }
 }
 
@@ -24,6 +31,30 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Responsive layout utilities */
+.responsive-container {
+  width: 100%;
+  max-width: 1380px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 /* Subtle animations */

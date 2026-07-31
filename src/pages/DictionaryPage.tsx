@@ -32,7 +32,7 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<DictionaryTab>('search');
   const [selectedEntry, setSelectedEntry] = useState<DictionaryEntry | null>(null);
-  const [visibleCount, setVisibleCount] = useState<number>(15);
+  const [visibleCount, setVisibleCount] = useState<number>(18);
 
   const tabs: { id: DictionaryTab; label: string; badge?: string }[] = [
     { id: 'search', label: 'Tra từ' },
@@ -52,7 +52,7 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
   };
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 20);
+    setVisibleCount((prev) => prev + 24);
   };
 
   const currentTabEntries = React.useMemo(() => {
@@ -66,19 +66,19 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
   }, [activeTab]);
 
   return (
-    <div className="w-full max-w-[390px] h-[100vh] sm:h-[844px] bg-[#008080] sm:rounded-[28px] shadow-[0_25px_60px_-15px_rgba(0,128,128,0.5),0_0_0_1px_rgba(255,255,255,0.15)] flex flex-col justify-between relative overflow-hidden font-sans border-0 sm:border border-white/20 select-none">
+    <div className="w-full min-h-screen bg-[#008080] flex flex-col justify-between relative font-sans overflow-x-hidden">
       {/* Background Layer Teal Variant */}
       <ChineseBackground variant="green" />
 
-      {/* Scrollable Viewport */}
-      <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col justify-between relative z-10">
+      {/* Responsive Viewport */}
+      <div className="responsive-container py-4 flex-1 flex flex-col justify-between relative z-10">
         <div>
           {/* Header & Status bar */}
           <StatusBar />
           <DictionaryHeader onBack={handleBack} />
 
           {/* Search Component */}
-          <div className="px-4 py-1.5">
+          <div className="py-2 max-w-3xl mx-auto">
             <DictionarySearch
               onSelectEntry={(entry) => setSelectedEntry(entry)}
               showToast={showToast}
@@ -86,7 +86,7 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
           </div>
 
           {/* Horizontal Scrollable Tabs Bar */}
-          <div className="px-4 py-2">
+          <div className="py-2 mb-3">
             <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
               {tabs.map((t) => {
                 const isActive = activeTab === t.id;
@@ -95,10 +95,10 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
                     key={t.id}
                     onClick={() => {
                       setActiveTab(t.id);
-                      setVisibleCount(15);
+                      setVisibleCount(18);
                     }}
                     type="button"
-                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
+                    className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
                       isActive
                         ? 'bg-white text-[#008080] shadow-md scale-105'
                         : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-md'
@@ -106,7 +106,7 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
                   >
                     <span>{t.label}</span>
                     {t.badge && (
-                      <span className="text-[9px] bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full">
+                      <span className="text-[9px] sm:text-[10px] bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full">
                         {t.badge}
                       </span>
                     )}
@@ -118,27 +118,27 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
 
           {/* Tab Views Content */}
           {activeTab === 'communication' ? (
-            <div className="px-4 py-1.5">
+            <div className="py-1">
               <EssentialCommunicationSection showToast={showToast} />
             </div>
           ) : activeTab === 'confusing' ? (
-            <div className="px-4 py-1.5 space-y-3">
-              <div className="bg-white rounded-2xl p-4 shadow-md space-y-3">
-                <h2 className="text-sm font-extrabold text-slate-900 border-b border-slate-100 pb-2">
+            <div className="py-1 space-y-3">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md space-y-4">
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 border-b border-slate-100 pb-2">
                   Cặp Từ Dễ Nhầm Lẫn Trong Tiếng Trung
                 </h2>
-                <div className="space-y-2.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {CONFUSING_WORDS_DATA.map((pair) => (
-                    <div key={pair.id} className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
+                    <div key={pair.id} className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-black text-emerald-800">
+                        <span className="text-xs sm:text-sm font-black text-emerald-800">
                           {pair.wordA} ({pair.pinyinA}) vs {pair.wordB} ({pair.pinyinB})
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-700 font-medium">
+                      <p className="text-xs text-slate-700 font-medium">
                         💡 {pair.differenceSummary}
                       </p>
-                      <div className="text-[10.5px] text-slate-600 bg-white p-2 rounded-lg border border-slate-100 space-y-0.5">
+                      <div className="text-[11px] text-slate-600 bg-white p-2 rounded-lg border border-slate-100 space-y-0.5">
                         <div>• Ví dụ A: <span className="font-serif font-bold">{pair.exampleA}</span></div>
                         <div>• Ví dụ B: <span className="font-serif font-bold">{pair.exampleB}</span></div>
                       </div>
@@ -148,52 +148,55 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
               </div>
             </div>
           ) : (
-            <div className="space-y-3 px-4 py-1">
-              {currentTabEntries.slice(0, visibleCount).map((entry) => (
-                <DictionaryWordCard
-                  key={entry.id}
-                  word={{
-                    id: entry.id,
-                    simplified: entry.simplified,
-                    traditional: entry.traditional,
-                    pinyin: entry.pinyin,
-                    pinyinClean: entry.normalizedPinyin,
-                    vietnameseMeanings: entry.senses.map((s) => s.shortDefinition || s.vietnameseDefinition),
-                    hskLevel: entry.hskLevel,
-                    partOfSpeech: entry.partOfSpeech,
-                    radicals: entry.radical || '工',
-                    strokeCount: entry.strokeCount || 5,
-                    frequency: entry.frequency === 'high' ? 'Phổ biến' : 'Thường dùng',
-                    tags: entry.categories,
-                    examples: entry.examples.map((ex) => ({
-                      sentence: ex.chinese,
-                      pinyin: ex.pinyin,
-                      vietnamese: ex.vietnamese,
-                    })),
-                  }}
-                  onSeeAllClick={() => setActiveTab('factory')}
-                  showToast={showToast}
-                />
-              ))}
+            <div className="space-y-4 py-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {currentTabEntries.slice(0, visibleCount).map((entry) => (
+                  <DictionaryWordCard
+                    key={entry.id}
+                    word={{
+                      id: entry.id,
+                      simplified: entry.simplified,
+                      traditional: entry.traditional,
+                      pinyin: entry.pinyin,
+                      pinyinClean: entry.normalizedPinyin,
+                      vietnameseMeanings: entry.senses.map((s) => s.shortDefinition || s.vietnameseDefinition),
+                      hskLevel: entry.hskLevel,
+                      partOfSpeech: entry.partOfSpeech,
+                      radicals: entry.radical || '工',
+                      strokeCount: entry.strokeCount || 5,
+                      frequency: entry.frequency === 'high' ? 'Phổ biến' : 'Thường dùng',
+                      tags: entry.categories,
+                      examples: entry.examples.map((ex) => ({
+                        sentence: ex.chinese,
+                        pinyin: ex.pinyin,
+                        vietnamese: ex.vietnamese,
+                      })),
+                    }}
+                    onSeeAllClick={() => setActiveTab('factory')}
+                    showToast={showToast}
+                  />
+                ))}
+              </div>
 
               {visibleCount < currentTabEntries.length && (
-                <button
-                  onClick={handleLoadMore}
-                  type="button"
-                  className="w-full bg-white/20 hover:bg-white/30 text-white font-extrabold text-xs py-2.5 rounded-xl border border-white/30 cursor-pointer active:scale-95 transition-transform"
-                >
-                  Tải thêm từ ({visibleCount}/{currentTabEntries.length})
-                </button>
+                <div className="max-w-md mx-auto pt-2">
+                  <button
+                    onClick={handleLoadMore}
+                    type="button"
+                    className="w-full bg-white/20 hover:bg-white/30 text-white font-extrabold text-xs sm:text-sm py-3 rounded-xl border border-white/30 cursor-pointer active:scale-95 transition-transform"
+                  >
+                    Tải thêm từ ({visibleCount}/{currentTabEntries.length})
+                  </button>
+                </div>
               )}
             </div>
           )}
         </div>
 
-        {/* Bottom spacing */}
-        <div className="h-3" />
+        <div className="h-4" />
       </div>
 
-      {/* Bottom Navigation with 'dictionary' active */}
+      {/* Bottom Navigation */}
       <BottomNavigation activeTab="dictionary" />
 
       {/* Dictionary Detail Modal */}
