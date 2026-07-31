@@ -60,7 +60,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     switch (activeTab) {
       case 'pronunciation':
         return {
-          background: 'linear-gradient(180deg, rgba(185, 20, 30, 0.82) 0%, rgba(150, 10, 20, 0.96) 100%)',
+          background: 'linear-gradient(180deg, rgba(185, 20, 30, 0.88) 0%, rgba(150, 10, 20, 0.98) 100%)',
           borderColor: 'rgba(255, 255, 255, 0.22)',
           inactiveText: 'text-white/70 hover:text-white',
           activeText: 'text-white font-extrabold',
@@ -69,7 +69,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         };
       case 'grammar':
         return {
-          background: 'linear-gradient(180deg, rgba(18, 60, 160, 0.85) 0%, rgba(12, 45, 130, 0.96) 100%)',
+          background: 'linear-gradient(180deg, rgba(18, 60, 160, 0.88) 0%, rgba(12, 45, 130, 0.98) 100%)',
           borderColor: 'rgba(255, 255, 255, 0.22)',
           inactiveText: 'text-blue-100/70 hover:text-white',
           activeText: 'text-white font-extrabold',
@@ -78,7 +78,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         };
       case 'dictionary':
         return {
-          background: 'linear-gradient(180deg, rgba(20, 85, 30, 0.85) 0%, rgba(15, 65, 22, 0.96) 100%)',
+          background: 'linear-gradient(180deg, rgba(20, 85, 30, 0.88) 0%, rgba(15, 65, 22, 0.98) 100%)',
           borderColor: 'rgba(255, 255, 255, 0.22)',
           inactiveText: 'text-emerald-100/70 hover:text-white',
           activeText: 'text-white font-extrabold',
@@ -88,7 +88,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
       case 'flashcard':
       case 'flashcards':
         return {
-          background: 'linear-gradient(180deg, rgba(110, 20, 150, 0.85) 0%, rgba(85, 12, 120, 0.96) 100%)',
+          background: 'linear-gradient(180deg, rgba(110, 20, 150, 0.88) 0%, rgba(85, 12, 120, 0.98) 100%)',
           borderColor: 'rgba(255, 255, 255, 0.22)',
           inactiveText: 'text-purple-100/70 hover:text-white',
           activeText: 'text-white font-extrabold',
@@ -97,7 +97,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         };
       case 'quiz':
         return {
-          background: 'linear-gradient(180deg, rgba(210, 70, 0, 0.85) 0%, rgba(175, 50, 0, 0.96) 100%)',
+          background: 'linear-gradient(180deg, rgba(210, 70, 0, 0.88) 0%, rgba(175, 50, 0, 0.98) 100%)',
           borderColor: 'rgba(255, 255, 255, 0.22)',
           inactiveText: 'text-amber-100/70 hover:text-white',
           activeText: 'text-white font-extrabold',
@@ -106,7 +106,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         };
       case 'settings':
         return {
-          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(10, 15, 30, 0.96) 100%)',
+          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(10, 15, 30, 0.98) 100%)',
           borderColor: 'rgba(255, 255, 255, 0.15)',
           inactiveText: 'text-slate-400 hover:text-white',
           activeText: 'text-white font-extrabold',
@@ -116,7 +116,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
       case 'home':
       default:
         return {
-          background: 'linear-gradient(180deg, rgba(145, 20, 25, 0.85) 0%, rgba(120, 10, 15, 0.96) 100%)',
+          background: 'linear-gradient(180deg, rgba(145, 20, 25, 0.88) 0%, rgba(120, 10, 15, 0.98) 100%)',
           borderColor: 'rgba(255, 255, 255, 0.22)',
           inactiveText: 'text-red-100/70 hover:text-white',
           activeText: 'text-white font-extrabold',
@@ -148,26 +148,33 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
   const navContent = (
     <div
-      ref={navRef}
       style={{
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
         zIndex: 50,
+        pointerEvents: 'none',
         margin: 0,
-        background: theme.background,
-        backdropFilter: 'blur(16px) saturate(140%)',
-        WebkitBackdropFilter: 'blur(16px) saturate(140%)',
-        borderTop: `1px solid ${theme.borderColor}`,
-        boxShadow: theme.shadow,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        padding: 0,
       }}
-      className="w-full pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none transition-all duration-300"
+      className="w-full flex justify-center"
     >
-      {/* Centered inner container matching app max-width */}
-      <div className="w-full max-w-[1440px] mx-auto">
+      {/* Centered nav bar matching exact app content surface width (max-w-[1440px]) */}
+      <div
+        ref={navRef}
+        style={{
+          pointerEvents: 'auto',
+          background: theme.background,
+          backdropFilter: 'blur(16px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(16px) saturate(140%)',
+          borderTop: `1px solid ${theme.borderColor}`,
+          boxShadow: theme.shadow,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+        }}
+        className="w-full max-w-[1440px] mx-auto pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none transition-all duration-300"
+      >
         {/* 7 Tabs Row Container */}
         <div className="flex items-center justify-around max-w-5xl mx-auto">
           {tabs.map((tab) => {
