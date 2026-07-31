@@ -203,7 +203,7 @@ export const FullPinyinChart: React.FC<FullPinyinChartProps> = ({
                           </span>
                         )}
                         <button
-                          onClick={(e) => handlePlayAudio(e, syl.baseSyllable)}
+                          onClick={(e) => handlePlayAudio(e, syl.examples?.[0]?.audioText || syl.examples?.[0]?.character || syl.baseSyllable)}
                           type="button"
                           className="opacity-0 group-hover:opacity-100 p-0.5 bg-red-100 text-[#EF3B32] rounded-full cursor-pointer transition-opacity"
                         >

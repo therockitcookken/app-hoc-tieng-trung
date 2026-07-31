@@ -3,9 +3,15 @@
  * 100% Free External Online Standard Mandarin Chinese Voice Sources
  * (NetEase Youdao Chinese Voice, Google Translate Mandarin TTS, Baidu Chinese TTS)
  * NO Windows/System default TTS voice is used!
+ *
+ * UNIFIED READING RULE:
+ * Maps all Pinyin initials, finals, and base syllables to standard Chinese Hanzi characters
+ * ensuring 100% identical, unified pronunciation inside modals and outside tables!
  */
 
-// Pinyin Initials (Thanh mẫu) & Finals (Vận mẫu) mapping to standard Chinese character audio equivalents
+import { VALID_MANDARIN_SYLLABLES } from '../data/pronunciation/syllablesData';
+
+// Pinyin Initials (Thanh mẫu) & Single/Compound Finals (Vận mẫu) mapping to standard Chinese character audio equivalents
 const PINYIN_SOUND_MAP: Record<string, string> = {
   // Initials (Thanh mẫu)
   b: '玻',
@@ -77,6 +83,21 @@ const PINYIN_SOUND_MAP: Record<string, string> = {
   er: '二',
 };
 
+// Unified Syllables -> Hanzi mapping derived from ~400 standard Mandarin Pinyin combinations
+const SYLLABLE_TO_HANZI_MAP: Record<string, string> = {};
+
+// Populate map from VALID_MANDARIN_SYLLABLES dataset
+if (Array.isArray(VALID_MANDARIN_SYLLABLES)) {
+  VALID_MANDARIN_SYLLABLES.forEach((syl) => {
+    if (syl.baseSyllable && syl.examples && syl.examples.length > 0) {
+      const char = syl.examples[0].audioText || syl.examples[0].character;
+      if (char) {
+        SYLLABLE_TO_HANZI_MAP[syl.baseSyllable.toLowerCase().trim()] = char;
+      }
+    }
+  });
+}
+
 let currentAudio: HTMLAudioElement | null = null;
 
 export function stopChineseSpeech(): void {
@@ -104,12 +125,15 @@ export function speakChinese(text: string, rate: number = 0.85): void {
   // 1. Stop any currently playing audio
   stopChineseSpeech();
 
-  // 2. Normalize text: map pinyin initials/finals to standard Chinese characters if text is pure Pinyin sound
+  // 2. Normalize text: map pinyin initials/finals/syllables to standard Chinese characters if text is pure Pinyin sound
   const cleanLower = rawText.toLowerCase().replace(/[^a-zünv]/g, '');
   let textToSpeak = rawText;
 
-  // If text is a standalone Pinyin symbol (e.g., 'zh', 'ü', 'a', 'o', 'e', 'b', 'p', 'm'), use standard Chinese audio equivalent
-  if (PINYIN_SOUND_MAP[cleanLower] && !/[\u4e00-\u9fa5]/.test(rawText)) {
+  // Check if text is a Pinyin syllable (e.g. 'bo', 'ba', 'po', 'ma')
+  if (SYLLABLE_TO_HANZI_MAP[cleanLower] && !/[\u4e00-\u9fa5]/.test(rawText)) {
+    textToSpeak = SYLLABLE_TO_HANZI_MAP[cleanLower];
+  } else if (PINYIN_SOUND_MAP[cleanLower] && !/[\u4e00-\u9fa5]/.test(rawText)) {
+    // Check if text is a standalone initial/final symbol (e.g. 'zh', 'ü', 'a', 'o', 'e')
     textToSpeak = PINYIN_SOUND_MAP[cleanLower];
   }
 

@@ -32,6 +32,8 @@ export const PronunciationDetailPanel: React.FC<PronunciationDetailPanelProps> =
     ? item.symbol
     : item.baseSyllable;
 
+  const sampleAudioText = item.examples?.[0]?.audioText || item.examples?.[0]?.character || titleSymbol;
+
   const handlePlayAudio = (text: string, rate: number = 0.8) => {
     speakChinese(text, rate);
   };
@@ -66,7 +68,7 @@ export const PronunciationDetailPanel: React.FC<PronunciationDetailPanelProps> =
         {/* Audio Control Row */}
         <div className="flex items-center space-x-2 pt-1">
           <button
-            onClick={() => handlePlayAudio(titleSymbol, 0.8)}
+            onClick={() => handlePlayAudio(sampleAudioText, 0.8)}
             type="button"
             className="flex-1 bg-[#EF3B32] hover:bg-[#D92329] text-white py-2 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-transform flex items-center justify-center space-x-1.5 cursor-pointer"
           >
@@ -74,7 +76,7 @@ export const PronunciationDetailPanel: React.FC<PronunciationDetailPanelProps> =
             <span>Phát âm mẫu</span>
           </button>
           <button
-            onClick={() => handlePlayAudio(titleSymbol, 0.6)}
+            onClick={() => handlePlayAudio(sampleAudioText, 0.6)}
             type="button"
             className="bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold active:scale-95 transition-transform cursor-pointer"
           >
