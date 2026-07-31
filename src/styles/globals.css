@@ -43,7 +43,7 @@
     margin: 0;
     padding: 0;
     background-color: #0b1329;
-    background-image: radial-gradient(circle at top, rgba(30, 41, 59, 0.6) 0%, #0b1329 80%);
+    background-image: radial-gradient(circle at top, rgba(30, 41, 59, 0.7) 0%, #060b18 100%);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1e293b;
     overflow-x: clip;
@@ -62,6 +62,10 @@
   perspective: 1000px;
 }
 
+.perspective-2000 {
+  perspective: 2000px;
+}
+
 .transform-style-3d {
   transform-style: preserve-3d;
 }
@@ -75,6 +79,77 @@
   transform: rotateY(180deg);
 }
 
+.translate-z-4 {
+  transform: translateZ(16px);
+}
+
+.translate-z-8 {
+  transform: translateZ(32px);
+}
+
+/* Custom 3D Tactile Buttons & Badges */
+.btn-3d-red {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 5px 0 #991b1b, 0 10px 20px rgba(239, 68, 68, 0.35);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-3d-red:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #991b1b, 0 4px 10px rgba(239, 68, 68, 0.25);
+}
+
+.btn-3d-emerald {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 5px 0 #047857, 0 10px 20px rgba(16, 185, 129, 0.35);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-3d-emerald:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #047857, 0 4px 10px rgba(16, 185, 129, 0.25);
+}
+
+.btn-3d-blue {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 5px 0 #1d4ed8, 0 10px 20px rgba(59, 130, 246, 0.35);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-3d-blue:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #1d4ed8, 0 4px 10px rgba(59, 130, 246, 0.25);
+}
+
+.btn-3d-amber {
+  background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+  box-shadow: 0 5px 0 #b45309, 0 10px 20px rgba(245, 158, 11, 0.35);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-3d-amber:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #b45309, 0 4px 10px rgba(245, 158, 11, 0.25);
+}
+
+.btn-3d-purple {
+  background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%);
+  box-shadow: 0 5px 0 #6b21a8, 0 10px 20px rgba(168, 85, 247, 0.35);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-3d-purple:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #6b21a8, 0 4px 10px rgba(168, 85, 247, 0.25);
+}
+
+/* 3D Glassmorphism Container Extrusion */
+.glass-3d-container {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Custom scrollbar hiding */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -84,7 +159,7 @@
   scrollbar-width: none;
 }
 
-/* Responsive App Surface Container */
+/* Responsive App Surface Container with 3D Depth Frame */
 .app-theme-surface {
   width: 100%;
   max-width: 1440px;
@@ -101,11 +176,14 @@
   .app-theme-surface {
     margin-top: 0.75rem;
     margin-bottom: 0rem;
-    border-top-left-radius: 1.5rem;
-    border-top-right-radius: 1.5rem;
+    border-top-left-radius: 1.75rem;
+    border-top-right-radius: 1.75rem;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 30px 80px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.18),
+      inset 0 1px 2px rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -134,7 +212,16 @@
   }
 }
 
-/* Subtle animations */
+/* Subtle 3D animations */
+@keyframes float-3d-slow {
+  0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+  50% { transform: translateY(-8px) rotateX(4deg) rotateY(-4deg); }
+}
+
+.animate-float-3d {
+  animation: float-3d-slow 4s ease-in-out infinite;
+}
+
 @keyframes pulse-slow {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.15); opacity: 0.85; }
@@ -155,9 +242,9 @@
 
 /* Glow effects */
 .glow-card {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .glow-feature {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { CircularProgress } from './CircularProgress';
 import { ChevronRight } from 'lucide-react';
+import { ThreeDCard } from './3d/ThreeDCard';
 
 interface LearningProgressCardProps {
   onDetailClick?: () => void;
@@ -8,8 +9,8 @@ interface LearningProgressCardProps {
 
 export const LearningProgressCard: React.FC<LearningProgressCardProps> = ({ onDetailClick }) => {
   return (
-    <div className="w-full px-4 py-1.5 relative z-10">
-      <div className="bg-white rounded-2xl p-4 shadow-[0_6px_20px_rgba(0,0,0,0.06)] border border-white/80 relative overflow-hidden transition-all duration-200 hover:shadow-lg">
+    <div className="w-full py-1.5 relative z-10">
+      <ThreeDCard glowColor="rgba(239, 59, 50, 0.25)" className="bg-white p-4 border border-white/80 space-y-2">
         <div className="flex items-center space-x-3.5">
           {/* Left Side: Circular Progress */}
           <div className="flex-shrink-0">
@@ -22,7 +23,7 @@ export const LearningProgressCard: React.FC<LearningProgressCardProps> = ({ onDe
               <h2 className="text-[15px] font-extrabold text-[#242424] tracking-tight">
                 Tiến độ học tập
               </h2>
-              <ChevronRight className="w-4 h-4 text-red-300 opacity-60" strokeWidth={2.5} />
+              <ChevronRight className="w-4 h-4 text-red-500 opacity-80" strokeWidth={2.5} />
             </div>
 
             <div className="mt-1 text-[11.5px] text-[#666666] leading-[1.4] font-medium">
@@ -34,19 +35,19 @@ export const LearningProgressCard: React.FC<LearningProgressCardProps> = ({ onDe
               </p>
             </div>
 
-            {/* Bottom Right Pill Button */}
+            {/* Bottom Right Pill Button with 3D tactile press */}
             <div className="mt-2.5 flex justify-end">
               <button
                 onClick={onDetailClick}
                 type="button"
-                className="bg-gradient-to-r from-[#EF3B32] to-[#D92329] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full shadow-sm shadow-red-500/20 active:scale-95 transition-transform cursor-pointer"
+                className="btn-3d-red text-white text-[11px] font-extrabold px-4 py-1.5 rounded-full cursor-pointer"
               >
                 Xem chi tiết
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </ThreeDCard>
     </div>
   );
 };
