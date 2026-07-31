@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bottom-nav-height: 72px;
+  --bottom-nav-height: 76px;
   --mini-player-height: 0px;
   --fixed-action-bar-height: 0px;
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --page-bottom-gap: 28px;
+  --page-bottom-gap: 24px;
   --content-bottom-offset: calc(
     var(--bottom-nav-height) +
     var(--mini-player-height) +
@@ -20,7 +20,7 @@
 @media (min-width: 640px) {
   :root {
     --bottom-nav-height: 80px;
-    --page-bottom-gap: 36px;
+    --page-bottom-gap: 32px;
   }
 }
 
@@ -28,6 +28,11 @@
   * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    background-color: #0b1329;
+    overscroll-behavior-y: none;
   }
 
   html, body, #root {
@@ -44,6 +49,7 @@
     background-image: radial-gradient(circle at top, rgba(30, 41, 59, 0.6) 0%, #0b1329 80%);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1e293b;
+    overscroll-behavior-y: none;
   }
 }
 
@@ -72,8 +78,11 @@
 @media (min-width: 1024px) {
   .app-theme-surface {
     margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
-    border-radius: 1.5rem;
+    margin-bottom: 0rem;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 }
