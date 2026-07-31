@@ -67,7 +67,7 @@ export const QuizPage: React.FC<QuizPageProps> = ({ showToast }) => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#E65100] flex flex-col justify-between relative font-sans overflow-x-hidden">
+    <div className="app-theme-surface bg-[#E65100] flex flex-col justify-between font-sans">
       {/* Background Layer Orange Variant */}
       <ChineseBackground variant="orange" />
 

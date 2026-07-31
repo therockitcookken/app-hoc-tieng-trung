@@ -56,7 +56,7 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({ showToast }) => 
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#7B1FA2] flex flex-col justify-between relative font-sans overflow-x-hidden">
+    <div className="app-theme-surface bg-[#7B1FA2] flex flex-col justify-between font-sans">
       {/* Background Layer Purple Variant */}
       <ChineseBackground variant="purple" />
 

@@ -77,7 +77,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ showToast }) => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-900 flex flex-col justify-between relative font-sans overflow-x-hidden">
+    <div className="app-theme-surface bg-slate-900 flex flex-col justify-between font-sans">
       {/* Background Decorative Layer */}
       <ChineseBackground />
 

@@ -81,7 +81,7 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#D92329] flex flex-col justify-between relative font-sans overflow-x-hidden">
+    <div className="app-theme-surface bg-[#D92329] flex flex-col justify-between font-sans">
       {/* Background Decorative Layer */}
       <ChineseBackground />
 

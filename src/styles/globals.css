@@ -40,7 +40,8 @@
   }
 
   body {
-    background-color: #0f172a;
+    background-color: #0b1329;
+    background-image: radial-gradient(circle at top, rgba(30, 41, 59, 0.6) 0%, #0b1329 80%);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1e293b;
   }
@@ -53,6 +54,28 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Responsive App Surface Container */
+.app-theme-surface {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .app-theme-surface {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
 }
 
 /* Responsive layout utilities with automatic bottom clearance offset */

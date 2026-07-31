@@ -66,8 +66,8 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
   }, [activeTab]);
 
   return (
-    <div className="w-full min-h-screen bg-[#008080] flex flex-col justify-between relative font-sans overflow-x-hidden">
-      {/* Background Layer Teal Variant */}
+    <div className="app-theme-surface bg-[#1B5E20] flex flex-col justify-between font-sans">
+      {/* Background Decorative Layer (Green Variant) */}
       <ChineseBackground variant="green" />
 
       {/* Responsive Viewport */}

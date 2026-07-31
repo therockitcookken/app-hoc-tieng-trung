@@ -9,7 +9,7 @@ export const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full min-h-screen bg-[#D92329] flex flex-col justify-between relative font-sans overflow-x-hidden">
+    <div className="app-theme-surface bg-[#D92329] flex flex-col justify-between font-sans">
       <ChineseBackground />
 
       <div className="responsive-container py-4 flex-1 flex flex-col justify-between relative z-10">

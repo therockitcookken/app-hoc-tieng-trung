@@ -44,7 +44,7 @@ export const HomePage: React.FC<HomePageProps> = ({ showToast }) => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#D92329] flex flex-col justify-between relative font-sans overflow-x-hidden">
+    <div className="app-theme-surface bg-gradient-to-b from-[#9E1B1E] via-[#B81D22] to-[#8E1619] flex flex-col justify-between font-sans">
       {/* Background Decorative Layer */}
       <ChineseBackground />
 

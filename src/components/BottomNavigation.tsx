@@ -64,7 +64,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   return (
     <div
       ref={navRef}
-      className="fixed bottom-0 left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md border-t border-slate-200/90 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none shadow-[0_-6px_25px_rgba(0,0,0,0.09)]"
+      className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1440px] z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none shadow-[0_-6px_25px_rgba(0,0,0,0.09)] lg:bottom-3 lg:rounded-b-2xl"
     >
       {/* 7 Tabs Row Container */}
       <div className="flex items-center justify-around max-w-5xl mx-auto">
