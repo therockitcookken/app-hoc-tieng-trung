@@ -1,0 +1,56 @@
+import { GrammarExerciseItem } from '../../types/grammar';
+
+export const GRAMMAR_EXERCISES_DATA: GrammarExerciseItem[] = [
+  {
+    id: 'ge-1',
+    type: 'multiple-choice',
+    category: 'Câu chữ 把',
+    title: 'Bài tập 1: Câu chữ 把 trong công xưởng',
+    instruction: 'Chọn phương án chính xác nhất để hoàn thành câu:',
+    questionChinese: '请___安全帽戴好。',
+    audioText: '请把安全帽戴好。',
+    options: [
+      { id: 'opt-a', text: 'A. 把 (bǎ)', isCorrect: true, explanation: 'Chính xác! Cấu trúc 请把 + Tân ngữ + Động từ + 好.' },
+      { id: 'opt-b', text: 'B. 被 (bèi)', isCorrect: false },
+      { id: 'opt-c', text: 'C. 让 (ràng)', isCorrect: false },
+      { id: 'opt-d', text: 'D. 给 (gěi)', isCorrect: false },
+    ],
+    correctAnswerId: 'opt-a',
+    difficulty: 'Sơ cấp',
+    xp: 20,
+  },
+  {
+    id: 'ge-2',
+    type: 'particle-de',
+    category: 'Trợ từ 的/地/得',
+    title: 'Bài tập 2: Phân biệt 的, 地, 得',
+    instruction: 'Chọn trợ từ phù hợp điền vào chỗ trống:',
+    questionChinese: '质检员认真___检查每一个零件。',
+    audioText: '质检员认真地检查每一个零件。',
+    options: [
+      { id: 'opt-a', text: 'A. 的 (de)', isCorrect: false },
+      { id: 'opt-b', text: 'B. 地 (de)', isCorrect: true, explanation: 'Chính xác! Trạng ngữ "认真" đứng trước Động từ "检查" dùng 地.' },
+      { id: 'opt-c', text: 'C. 得 (de)', isCorrect: false },
+    ],
+    correctAnswerId: 'opt-b',
+    difficulty: 'Sơ cấp',
+    xp: 20,
+  },
+  {
+    id: 'ge-3',
+    type: 'error-correction',
+    category: 'Câu bị động 被',
+    title: 'Bài tập 3: Sửa lỗi sai trong câu bị động',
+    instruction: 'Chọn câu viết ĐÚNG ngữ pháp nhất:',
+    questionChinese: 'Sản phẩm không đạt đã bị trả về.',
+    audioText: '不合格的产品被退回去了。',
+    options: [
+      { id: 'opt-a', text: 'A. 产品被不合格退回去了。', isCorrect: false },
+      { id: 'opt-b', text: 'B. 不合格的产品被退回去了。', isCorrect: true, explanation: 'Đúng! Định ngữ "不合格的" bổ nghĩa cho danh từ "产品" làm chủ ngữ bị động.' },
+      { id: 'opt-c', text: 'C. 被不合格的产品退回去了。', isCorrect: false },
+    ],
+    correctAnswerId: 'opt-b',
+    difficulty: 'Trung cấp',
+    xp: 25,
+  },
+];
