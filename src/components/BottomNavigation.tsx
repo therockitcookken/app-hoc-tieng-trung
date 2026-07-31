@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Home, Mic, Trophy, BookOpen, BookMarked, Layers, Settings } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -7,14 +7,26 @@ export type NavTab = 'home' | 'pronunciation' | 'quiz' | 'grammar' | 'dictionary
 interface BottomNavigationProps {
   activeTab?: NavTab;
   onTabChange?: (tab: NavTab) => void;
+  hasMiniPlayer?: boolean;
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   activeTab: overrideTab,
   onTabChange,
+  hasMiniPlayer = false,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const navRef = useRef<HTMLDivElement>(null);
+
+  // Update CSS custom property --bottom-nav-height dynamically based on rendered height
+  useEffect(() => {
+    if (navRef.current) {
+      const height = navRef.current.getBoundingClientRect().height;
+      document.documentElement.style.setProperty('--bottom-nav-height', `${height}px`);
+      document.documentElement.style.setProperty('--mini-player-height', hasMiniPlayer ? '64px' : '0px');
+    }
+  }, [hasMiniPlayer]);
 
   // Determine current active tab automatically based on route if override not supplied
   const getActiveTab = (): NavTab => {
@@ -50,8 +62,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   };
 
   return (
-    <div className="w-full bg-white/95 backdrop-blur-md rounded-t-2xl sm:rounded-2xl shadow-[0_-6px_25px_rgba(0,0,0,0.08)] border-t sm:border border-slate-200/80 pt-2 pb-2 px-2 sm:px-4 sticky sm:fixed bottom-0 left-0 right-0 z-40 select-none max-w-7xl mx-auto my-0 sm:my-2">
-      {/* 7 Tabs Row */}
+    <div
+      ref={navRef}
+      className="fixed bottom-0 left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md border-t border-slate-200/90 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none shadow-[0_-6px_25px_rgba(0,0,0,0.09)]"
+    >
+      {/* 7 Tabs Row Container */}
       <div className="flex items-center justify-around max-w-5xl mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -88,7 +103,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 {tab.label}
               </span>
 
-              {/* Small Active Indicator Bar */}
+              {/* Active Indicator Bar */}
               {isActive && (
                 <div className={`w-4 sm:w-6 h-0.5 sm:h-1 rounded-full mt-0.5 bg-current ${tab.colorClass}`} />
               )}
