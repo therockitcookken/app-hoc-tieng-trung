@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, CheckCircle2, XCircle, ArrowRight, Award, Pause, Play, PlusCircle } from 'lucide-react';
+import { Volume2, CheckCircle2, XCircle, ArrowRight, Pause, Play, PlusCircle, Award } from 'lucide-react';
 import { QuizQuestion } from '../../types/quiz';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface QuizSessionPlayerProps {
   questions: QuizQuestion[];
@@ -38,13 +39,7 @@ export const QuizSessionPlayer: React.FC<QuizSessionPlayerProps> = ({
   }, [isFinished, isPaused]);
 
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   const handleSelectOption = (optionId: string) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Volume2, AlertCircle, BookOpen } from 'lucide-react';
 import { GrammarPoint } from '../../types/grammar';
 import { GrammarSentenceAnalysis } from './GrammarSentenceAnalysis';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface GrammarDetailPanelProps {
   isOpen: boolean;
@@ -20,13 +21,7 @@ export const GrammarDetailPanel: React.FC<GrammarDetailPanelProps> = ({
   const gp = grammarPoint;
 
   const handlePlayAudio = (text: string, rate: number = 0.8) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = rate;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, rate);
   };
 
   return (

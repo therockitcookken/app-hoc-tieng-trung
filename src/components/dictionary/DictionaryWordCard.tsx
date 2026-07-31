@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Volume2, Heart, Plus, Mic } from 'lucide-react';
 import { DictionaryWord } from '../../data/dictionaryData';
 import { ThreeDCard } from '../3d/ThreeDCard';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface DictionaryWordCardProps {
   word: DictionaryWord;
@@ -53,23 +54,9 @@ export const DictionaryWordCard: React.FC<DictionaryWordCardProps> = ({
   };
 
   const handlePlayAudio = () => {
-    if (isPlaying) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      setIsPlaying(false);
-      return;
-    }
     setIsPlaying(true);
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(word.simplified);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.85;
-      utterance.onend = () => setIsPlaying(false);
-      utterance.onerror = () => setIsPlaying(false);
-      window.speechSynthesis.speak(utterance);
-    } else {
-      setTimeout(() => setIsPlaying(false), 1500);
-    }
+    speakChinese(word.simplified, 0.85);
+    setTimeout(() => setIsPlaying(false), 1200);
   };
 
   // Sense Filter Logic: Only number if there are 2 or more valid non-empty definitions

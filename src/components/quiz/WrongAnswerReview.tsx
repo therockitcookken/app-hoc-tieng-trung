@@ -1,36 +1,43 @@
 import React from 'react';
-import { RotateCcw, PlusCircle, AlertCircle, Volume2 } from 'lucide-react';
+import { AlertCircle, Volume2, RotateCcw, PlusCircle, AlertTriangle } from 'lucide-react';
 import { QuizQuestion } from '../../types/quiz';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface WrongAnswerReviewProps {
-  wrongQuestions: QuizQuestion[];
-  onRetake: () => void;
+  wrongQuestions: QuizQuestion[] | { question: QuizQuestion; userAnswerId: string }[] | any[];
+  onRetryQuiz?: () => void;
+  onRetake?: () => void;
   showToast?: (msg: string) => void;
 }
 
 export const WrongAnswerReview: React.FC<WrongAnswerReviewProps> = ({
   wrongQuestions,
+  onRetryQuiz,
   onRetake,
   showToast,
 }) => {
   if (!wrongQuestions || wrongQuestions.length === 0) {
     return (
-      <div className="w-full bg-white rounded-2xl p-4 shadow-md border border-slate-100 text-center text-xs text-slate-500 space-y-1">
-        <span className="text-2xl block">🎉</span>
+      <div className="w-full bg-white rounded-2xl p-6 shadow-md border border-slate-100 text-center space-y-2 select-none">
+        <AlertTriangle className="w-8 h-8 text-emerald-500 mx-auto" />
         <span className="font-bold text-slate-900 block">Bạn chưa có câu nào làm sai!</span>
         <p className="text-[11px] text-slate-400">Hãy tiếp tục thực hiện các bài Quiz để nâng cao phản xạ.</p>
       </div>
     );
   }
 
+  // Normalize questions list whether passed as raw QuizQuestion or wrapped
+  const questionsList: QuizQuestion[] = wrongQuestions.map((item) =>
+    item.question ? item.question : item
+  );
+
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
+  };
+
+  const handleRetryAction = () => {
+    if (onRetryQuiz) onRetryQuiz();
+    else if (onRetake) onRetake();
   };
 
   return (
@@ -40,11 +47,11 @@ export const WrongAnswerReview: React.FC<WrongAnswerReviewProps> = ({
         <div className="flex items-center space-x-1.5">
           <AlertCircle className="w-4 h-4 text-rose-600" />
           <h2 className="text-[14px] font-extrabold text-slate-900 tracking-tight">
-            Ôn tập Các Câu Hỏi Làm Sai ({wrongQuestions.length})
+            Ôn tập Các Câu Hỏi Làm Sai ({questionsList.length})
           </h2>
         </div>
         <button
-          onClick={onRetake}
+          onClick={handleRetryAction}
           type="button"
           className="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full flex items-center space-x-1 cursor-pointer hover:bg-rose-100"
         >
@@ -55,16 +62,16 @@ export const WrongAnswerReview: React.FC<WrongAnswerReviewProps> = ({
 
       {/* Questions List */}
       <div className="space-y-2.5 max-h-[320px] overflow-y-auto no-scrollbar pt-1">
-        {wrongQuestions.map((q) => (
+        {questionsList.map((q) => (
           <div key={q.id} className="bg-rose-50/70 p-3 rounded-xl border border-rose-200 space-y-1.5">
             <div className="flex items-start justify-between">
               <span className="text-xs font-black text-slate-900 font-serif">
                 {q.questionChinese}
               </span>
 
-              {q.audioText && (
+              {(q.audioText || q.questionChinese) && (
                 <button
-                  onClick={() => handlePlayAudio(q.audioText!)}
+                  onClick={() => handlePlayAudio(q.audioText || q.questionChinese)}
                   type="button"
                   className="text-rose-600 p-1 cursor-pointer hover:scale-110"
                 >
@@ -81,7 +88,7 @@ export const WrongAnswerReview: React.FC<WrongAnswerReviewProps> = ({
               <span className="font-bold text-emerald-700 block">
                 ✅ Đáp án đúng: {q.options.find((o) => o.isCorrect)?.textVietnamese}
               </span>
-              <span className="text-slate-500 block">💡 {q.explanation}</span>
+              {q.explanation && <span className="text-slate-500 block">💡 {q.explanation}</span>}
             </div>
           </div>
         ))}
@@ -89,7 +96,7 @@ export const WrongAnswerReview: React.FC<WrongAnswerReviewProps> = ({
 
       {/* Export to Flashcards Action */}
       <button
-        onClick={() => showToast?.(`Đã thêm ${wrongQuestions.length} câu sai vào sổ tay Flashcard!`)}
+        onClick={() => showToast?.(`Đã thêm ${questionsList.length} câu sai vào sổ tay Flashcard!`)}
         type="button"
         className="w-full bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 transition-transform"
       >

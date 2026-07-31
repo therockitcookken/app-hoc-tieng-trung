@@ -10,6 +10,7 @@ import { PronunciationTipCard } from '../components/pronunciation/PronunciationT
 import { CurrentLessonPlayer } from '../components/pronunciation/CurrentLessonPlayer';
 import { BottomNavigation } from '../components/BottomNavigation';
 import { PronunciationDetailsModal } from '../components/pronunciation/PronunciationDetailsModal';
+import { speakChinese } from '../utils/chineseSpeech';
 
 // New Comprehensive Pronunciation Components
 import { FullPinyinChart } from '../components/pronunciation/FullPinyinChart';
@@ -71,13 +72,7 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
   };
 
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   return (

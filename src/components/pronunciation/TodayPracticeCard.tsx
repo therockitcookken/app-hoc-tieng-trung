@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, Mic, Play, Square, RefreshCw, CheckCircle2, ChevronRight, VolumeX } from 'lucide-react';
 import { PronunciationWaveform } from './PronunciationWaveform';
 import { LessonItem } from '../../data/pronunciationData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface TodayPracticeCardProps {
   lesson: LessonItem;
@@ -24,40 +25,10 @@ export const TodayPracticeCard: React.FC<TodayPracticeCardProps> = ({
 
   // Play audio sample using Web Speech API TTS or Fallback
   const handlePlaySample = () => {
-    if (isPlayingSample) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-      setIsPlayingSample(false);
-      return;
-    }
-
     setIsPlayingSample(true);
     setAudioError(null);
-
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(lesson.char || lesson.soundText);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-
-      utterance.onend = () => {
-        setIsPlayingSample(false);
-      };
-
-      utterance.onerror = () => {
-        setIsPlayingSample(false);
-        // Simulated audio playback timeout
-        setTimeout(() => setIsPlayingSample(false), 1200);
-      };
-
-      window.speechSynthesis.speak(utterance);
-    } else {
-      // Fallback timer if speech synthesis is not supported
-      setTimeout(() => {
-        setIsPlayingSample(false);
-      }, 1500);
-    }
+    speakChinese(lesson.char || lesson.soundText, 0.8);
+    setTimeout(() => setIsPlayingSample(false), 1200);
   };
 
   // Handle Recording (Microphone permission or simulation fallback)

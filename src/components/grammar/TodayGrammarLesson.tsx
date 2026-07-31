@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Volume2, Bookmark, BookOpen, Check, VolumeX } from 'lucide-react';
 import { GrammarStructureAnalysis } from './GrammarStructureAnalysis';
 import { GrammarLesson } from '../../data/grammarData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface TodayGrammarLessonProps {
   lesson: GrammarLesson;
@@ -46,30 +47,10 @@ export const TodayGrammarLesson: React.FC<TodayGrammarLessonProps> = ({
   };
 
   const handlePlayAudio = () => {
-    if (isPlaying) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-      setIsPlaying(false);
-      return;
-    }
-
     setIsPlaying(true);
-
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const sentenceToSpeak = lesson.exampleSentence || '我一边听音乐，一边学习。';
-      const utterance = new SpeechSynthesisUtterance(sentenceToSpeak);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.85;
-
-      utterance.onend = () => setIsPlaying(false);
-      utterance.onerror = () => setIsPlaying(false);
-
-      window.speechSynthesis.speak(utterance);
-    } else {
-      setTimeout(() => setIsPlaying(false), 2000);
-    }
+    const sentenceToSpeak = lesson.exampleSentence || '我一边听音乐，一边学习。';
+    speakChinese(sentenceToSpeak, 0.85);
+    setTimeout(() => setIsPlaying(false), 2000);
   };
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, CheckCircle2, ChevronLeft, ChevronRight, VolumeX } from 'lucide-react';
 import { QuizQuestion } from '../../data/quizData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface QuizQuestionCardProps {
   question: QuizQuestion;
@@ -23,24 +24,10 @@ export const QuizQuestionCard: React.FC<QuizQuestionCardProps> = ({
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   const handlePlayAudio = () => {
-    if (isPlayingAudio) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      setIsPlayingAudio(false);
-      return;
-    }
     setIsPlayingAudio(true);
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const textToPlay = question.audioText || question.questionChinese;
-      const utterance = new SpeechSynthesisUtterance(textToPlay);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.85;
-      utterance.onend = () => setIsPlayingAudio(false);
-      utterance.onerror = () => setIsPlayingAudio(false);
-      window.speechSynthesis.speak(utterance);
-    } else {
-      setTimeout(() => setIsPlayingAudio(false), 1500);
-    }
+    const textToPlay = question.audioText || question.questionChinese;
+    speakChinese(textToPlay, 0.85);
+    setTimeout(() => setIsPlayingAudio(false), 1200);
   };
 
   const handleOptionClick = (optId: string) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Clock, ChevronRight, Volume2 } from 'lucide-react';
 import { RECENT_SEARCHES_MOCK } from '../../data/dictionaryData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface RecentSearchesSectionProps {
   onSelectWord: (word: string) => void;
@@ -13,13 +14,7 @@ export const RecentSearchesSection: React.FC<RecentSearchesSectionProps> = ({
 }) => {
   const handlePlaySound = (e: React.MouseEvent, text: string) => {
     e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.85;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.85);
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, Briefcase } from 'lucide-react';
 import { FACTORY_PRONUNCIATION_DATA, FactoryWordPronunciation } from '../../data/pronunciation/factoryPronunciationData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface FactoryPronunciationSectionProps {
   showToast?: (msg: string) => void;
@@ -19,13 +20,7 @@ export const FactoryPronunciationSection: React.FC<FactoryPronunciationSectionPr
   });
 
   const handlePlayAudio = (text: string, rate: number = speechRate) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = rate;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, rate);
   };
 
   return (

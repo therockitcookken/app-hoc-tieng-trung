@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Volume2, PlusCircle } from 'lucide-react';
 import { DictionaryEntry } from '../../types/dictionary';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface DictionaryWordDetailProps {
   isOpen: boolean;
@@ -18,13 +19,7 @@ export const DictionaryWordDetail: React.FC<DictionaryWordDetailProps> = ({
   if (!isOpen || !entry) return null;
 
   const handlePlayAudio = (text: string, rate: number = 0.8) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = rate;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, rate);
   };
 
   return (

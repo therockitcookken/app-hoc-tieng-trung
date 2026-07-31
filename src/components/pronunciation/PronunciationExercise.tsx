@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, Mic, Square, CheckCircle2, XCircle, Trophy, Sparkles, RefreshCw } from 'lucide-react';
 import { PRONUNCIATION_EXERCISES, PronunciationExerciseItem } from '../../data/pronunciation/exercisesData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface PronunciationExerciseProps {
   showToast?: (msg: string) => void;
@@ -16,13 +17,7 @@ export const PronunciationExercise: React.FC<PronunciationExerciseProps> = ({ sh
   const ex: PronunciationExerciseItem = PRONUNCIATION_EXERCISES[currentIdx] || PRONUNCIATION_EXERCISES[0];
 
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   const handleSelectOption = (optId: string) => {

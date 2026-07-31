@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, Sparkles } from 'lucide-react';
 import { GRAMMAR_COMPARISONS_DATA, GrammarComparisonPair } from '../../data/grammar/grammarComparisonsData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface GrammarComparisonModuleProps {
   showToast?: (msg: string) => void;
@@ -12,13 +13,7 @@ export const GrammarComparisonModule: React.FC<GrammarComparisonModuleProps> = (
   const pair: GrammarComparisonPair = GRAMMAR_COMPARISONS_DATA[selectedIndex] || GRAMMAR_COMPARISONS_DATA[0];
 
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, Briefcase } from 'lucide-react';
 import { GRAMMAR_POINTS_DATA } from '../../data/grammar/grammarPointsData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface FactoryGrammarSectionProps {
   showToast?: (msg: string) => void;
@@ -13,13 +14,7 @@ export const FactoryGrammarSection: React.FC<FactoryGrammarSectionProps> = () =>
   const topic = factoryTopics[selectedTopicIndex] || factoryTopics[0];
 
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   return (

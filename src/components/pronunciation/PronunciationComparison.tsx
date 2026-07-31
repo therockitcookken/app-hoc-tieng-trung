@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, HelpCircle, CheckCircle2, XCircle, Sparkles } from 'lucide-react';
 import { COMPARISON_PAIRS, PronunciationComparisonPair } from '../../data/pronunciation/comparisonsData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface PronunciationComparisonProps {
   showToast?: (msg: string) => void;
@@ -14,13 +15,7 @@ export const PronunciationComparison: React.FC<PronunciationComparisonProps> = (
   const pair: PronunciationComparisonPair = COMPARISON_PAIRS[selectedPairIndex] || COMPARISON_PAIRS[0];
 
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   const handleAnswer = (option: 'A' | 'B') => {

@@ -4,6 +4,8 @@ import { DICTIONARY_ENTRIES_DATA } from '../../data/dictionary/dictionaryEntries
 import { normalizePinyin } from '../../utils/pinyinNormalizer';
 import { DictionaryEntry } from '../../types/dictionary';
 
+import { speakChinese } from '../../utils/chineseSpeech';
+
 interface DictionarySearchProps {
   onSelectEntry: (entry: DictionaryEntry) => void;
   showToast?: (msg: string) => void;
@@ -30,13 +32,7 @@ export const DictionarySearch: React.FC<DictionarySearchProps> = ({
 
   const handlePlayAudio = (e: React.MouseEvent, text: string) => {
     e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.85);
   };
 
   return (

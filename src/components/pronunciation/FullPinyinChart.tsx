@@ -4,6 +4,7 @@ import { INITIALS_DATA } from '../../data/pronunciation/initialsData';
 import { FINALS_DATA } from '../../data/pronunciation/finalsData';
 import { VALID_MANDARIN_SYLLABLES, PinyinSyllable } from '../../data/pronunciation/syllablesData';
 import { ThreeDCard } from '../3d/ThreeDCard';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface FullPinyinChartProps {
   onSelectSyllable: (syllable: PinyinSyllable) => void;
@@ -21,13 +22,7 @@ export const FullPinyinChart: React.FC<FullPinyinChartProps> = ({
   // Play audio sample
   const handlePlayAudio = (e: React.MouseEvent, text: string) => {
     e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   // Filtered valid syllables set for ultra-fast lookup

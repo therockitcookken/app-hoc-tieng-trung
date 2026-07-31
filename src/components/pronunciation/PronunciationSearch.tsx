@@ -4,6 +4,7 @@ import { INITIALS_DATA } from '../../data/pronunciation/initialsData';
 import { FINALS_DATA } from '../../data/pronunciation/finalsData';
 import { FACTORY_PRONUNCIATION_DATA } from '../../data/pronunciation/factoryPronunciationData';
 import { convertNumberedPinyinToToneMarks, removeToneMarks } from '../../utils/pinyinToneConverter';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface PronunciationSearchProps {
   onSelectResult: (type: 'initial' | 'final' | 'factory', item: any) => void;
@@ -55,13 +56,7 @@ export const PronunciationSearch: React.FC<PronunciationSearchProps> = ({
 
   const handlePlayAudio = (e: React.MouseEvent, text: string) => {
     e.stopPropagation();
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   return (

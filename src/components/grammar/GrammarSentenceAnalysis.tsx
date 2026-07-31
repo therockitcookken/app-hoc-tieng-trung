@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, Sparkles, Layers } from 'lucide-react';
 import { SentenceAnalysisToken } from '../../types/grammar';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface GrammarSentenceAnalysisProps {
   chineseSentence: string;
@@ -24,13 +25,7 @@ export const GrammarSentenceAnalysis: React.FC<GrammarSentenceAnalysisProps> = (
   const [activeToken, setActiveToken] = useState<SentenceAnalysisToken | null>(null);
 
   const handlePlayAudio = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(audioText || chineseSentence);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(audioText || chineseSentence, 0.8);
   };
 
   return (

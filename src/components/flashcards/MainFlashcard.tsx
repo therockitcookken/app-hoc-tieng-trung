@@ -1,6 +1,7 @@
 import React from 'react';
 import { Volume2, Heart, RotateCcw } from 'lucide-react';
 import { FlashcardItem } from '../../types/flashcards';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface MainFlashcardProps {
   card: FlashcardItem;
@@ -19,14 +20,11 @@ export const MainFlashcard: React.FC<MainFlashcardProps> = ({
 }) => {
   const handleAudio = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const textToSpeak = card.audioText || card.simplified || '';
     if (onPlayAudio) {
-      onPlayAudio(card.audioText || card.simplified || '');
-    } else if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(card.audioText || card.simplified || '');
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
+      onPlayAudio(textToSpeak);
+    } else {
+      speakChinese(textToSpeak, 0.8);
     }
   };
 

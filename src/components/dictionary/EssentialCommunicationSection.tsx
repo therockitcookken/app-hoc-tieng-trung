@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Volume2, MessageSquare } from 'lucide-react';
 import { ESSENTIAL_COMMUNICATION_DATA } from '../../data/dictionary/essentialCommunicationData';
+import { speakChinese } from '../../utils/chineseSpeech';
 
 interface EssentialCommunicationSectionProps {
   showToast?: (msg: string) => void;
@@ -17,13 +18,7 @@ export const EssentialCommunicationSection: React.FC<EssentialCommunicationSecti
   });
 
   const handlePlayAudio = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      window.speechSynthesis.speak(utterance);
-    }
+    speakChinese(text, 0.8);
   };
 
   return (
