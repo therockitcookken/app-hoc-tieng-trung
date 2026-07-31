@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Volume2, Bookmark, BookOpen, Check, VolumeX } from 'lucide-react';
 import { GrammarStructureAnalysis } from './GrammarStructureAnalysis';
 import { GrammarLesson } from '../../data/grammarData';
-import { speakChinese } from '../../utils/chineseSpeech';
+import { speakChinese, stopChineseSpeech } from '../../utils/chineseSpeech';
 
 interface TodayGrammarLessonProps {
   lesson: GrammarLesson;
@@ -55,7 +55,7 @@ export const TodayGrammarLesson: React.FC<TodayGrammarLessonProps> = ({
 
   useEffect(() => {
     return () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      stopChineseSpeech();
     };
   }, []);
 

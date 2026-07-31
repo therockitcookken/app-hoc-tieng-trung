@@ -1,7 +1,8 @@
 /**
  * Global Chinese Text-to-Speech Engine
- * Uses External Standard Mandarin Chinese Voice APIs (Google Translate TTS & Youdao Chinese Voice)
- * Guarantees 100% authentic Mandarin Chinese pronunciation for Hanzi, Pinyin initials, finals & sentences.
+ * 100% Free External Online Standard Mandarin Chinese Voice Sources
+ * (NetEase Youdao Chinese Voice, Google Translate Mandarin TTS, Baidu Chinese TTS)
+ * NO Windows/System default TTS voice is used!
  */
 
 // Pinyin Initials (Thanh mẫu) & Finals (Vận mẫu) mapping to standard Chinese character audio equivalents
@@ -77,82 +78,8 @@ const PINYIN_SOUND_MAP: Record<string, string> = {
 };
 
 let currentAudio: HTMLAudioElement | null = null;
-let cachedChineseVoice: SpeechSynthesisVoice | null = null;
 
-export function getChineseVoice(): SpeechSynthesisVoice | null {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
-  if (cachedChineseVoice) return cachedChineseVoice;
-
-  const voices = window.speechSynthesis.getVoices();
-  if (!voices || voices.length === 0) return null;
-
-  const preferredVoice = voices.find((v) => {
-    const lang = v.lang.toLowerCase();
-    const name = v.name.toLowerCase();
-    return (
-      (lang.startsWith('zh') || lang.includes('zh-cn') || lang.includes('zh-tw') || lang.includes('zh-hk')) &&
-      (name.includes('xiaoxiao') ||
-        name.includes('huihui') ||
-        name.includes('kangkang') ||
-        name.includes('google') ||
-        name.includes('natural') ||
-        name.includes('online'))
-    );
-  });
-  if (preferredVoice) {
-    cachedChineseVoice = preferredVoice;
-    return preferredVoice;
-  }
-
-  const anyChineseVoice = voices.find((v) => {
-    const lang = v.lang.toLowerCase();
-    const name = v.name.toLowerCase();
-    return lang.startsWith('zh') || lang.includes('zh-cn') || name.includes('chinese') || name.includes('mandarin');
-  });
-  if (anyChineseVoice) {
-    cachedChineseVoice = anyChineseVoice;
-    return anyChineseVoice;
-  }
-
-  return null;
-}
-
-if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-  window.speechSynthesis.onvoiceschanged = () => {
-    cachedChineseVoice = null;
-    getChineseVoice();
-  };
-}
-
-function speakWithBrowserTTS(text: string, rate: number = 0.85): void {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-  try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-CN';
-    utterance.rate = rate;
-
-    const voice = getChineseVoice();
-    if (voice) {
-      utterance.voice = voice;
-    }
-
-    window.speechSynthesis.speak(utterance);
-  } catch (e) {
-    console.warn('Browser TTS error:', e);
-  }
-}
-
-/**
- * Main function to play authentic Standard Mandarin Chinese audio
- * Uses external Chinese Voice sources (Youdao Mandarin Chinese Voice & Google Translate TTS)
- */
-export function speakChinese(text: string, rate: number = 0.85): void {
-  if (!text || !text.trim()) return;
-
-  const rawText = text.trim();
-
-  // 1. Stop any currently playing audio or speech
+export function stopChineseSpeech(): void {
   if (currentAudio) {
     try {
       currentAudio.pause();
@@ -162,9 +89,20 @@ export function speakChinese(text: string, rate: number = 0.85): void {
     }
     currentAudio = null;
   }
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
+}
+
+/**
+ * Main function to play authentic Standard Mandarin Chinese audio
+ * Uses 100% External Free Chinese Voice APIs with CDN High Availability
+ * Completely avoids default Windows TTS voice.
+ */
+export function speakChinese(text: string, rate: number = 0.85): void {
+  if (!text || !text.trim()) return;
+
+  const rawText = text.trim();
+
+  // 1. Stop any currently playing audio
+  stopChineseSpeech();
 
   // 2. Normalize text: map pinyin initials/finals to standard Chinese characters if text is pure Pinyin sound
   const cleanLower = rawText.toLowerCase().replace(/[^a-zünv]/g, '');
@@ -177,34 +115,42 @@ export function speakChinese(text: string, rate: number = 0.85): void {
 
   const encodedText = encodeURIComponent(textToSpeak);
 
-  // 3. External Chinese Voice API URLs (High quality Mandarin Chinese Voice)
-  // Primary: Youdao Chinese Dict Voice API (Standard Mandarin Female/Male Voice)
-  // Secondary: Google Translate Mandarin Chinese TTS API
-  const primaryUrl = `https://dict.youdao.com/dictvoice?audio=${encodedText}&le=zh`;
-  const secondaryUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=zh-CN&client=tw-ob`;
+  // 3. Array of 100% Free External Online Standard Mandarin Chinese Voice URLs (High Availability CDN)
+  const voiceSources = [
+    // Source 1: NetEase Youdao Mandarin Voice API (High fidelity Mandarin voice)
+    `https://dict.youdao.com/dictvoice?audio=${encodedText}&le=zh`,
+    // Source 2: Google Translate Mandarin TTS API (Standard Beijing Mandarin voice)
+    `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=zh-CN&client=tw-ob`,
+    // Source 3: Baidu Mandarin Chinese TTS API 1
+    `https://tts.baidu.com/text2audio?tex=${encodedText}&cuid=baike&lan=ZH&ctp=1&pdt=301&spd=4`,
+    // Source 4: Baidu Mandarin Chinese TTS API 2
+    `https://fanyi.baidu.com/gettts?lan=zh&text=${encodedText}&spd=4&source=web`,
+  ];
 
-  try {
-    const audio = new Audio(primaryUrl);
-    currentAudio = audio;
-    audio.playbackRate = rate;
+  let sourceIndex = 0;
 
-    const playPromise = audio.play();
+  const playNextSource = () => {
+    if (sourceIndex >= voiceSources.length) return;
 
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Fallback to Secondary Google Translate Chinese Voice
-        const secondaryAudio = new Audio(secondaryUrl);
-        currentAudio = secondaryAudio;
-        secondaryAudio.playbackRate = rate;
+    const url = voiceSources[sourceIndex];
+    sourceIndex++;
 
-        secondaryAudio.play().catch(() => {
-          // Final Fallback: Browser Web Speech API with forced Chinese voice
-          speakWithBrowserTTS(textToSpeak, rate);
+    try {
+      const audio = new Audio(url);
+      currentAudio = audio;
+      audio.playbackRate = rate;
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Playback failed or blocked, try next external online Chinese voice source
+          playNextSource();
         });
-      });
+      }
+    } catch {
+      playNextSource();
     }
-  } catch (err) {
-    console.warn('Audio play error, falling back to Web Speech API:', err);
-    speakWithBrowserTTS(textToSpeak, rate);
-  }
+  };
+
+  playNextSource();
 }

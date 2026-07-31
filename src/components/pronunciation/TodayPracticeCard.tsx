@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, Mic, Play, Square, RefreshCw, CheckCircle2, ChevronRight, VolumeX } from 'lucide-react';
 import { PronunciationWaveform } from './PronunciationWaveform';
 import { LessonItem } from '../../data/pronunciationData';
-import { speakChinese } from '../../utils/chineseSpeech';
+import { speakChinese, stopChineseSpeech } from '../../utils/chineseSpeech';
 
 interface TodayPracticeCardProps {
   lesson: LessonItem;
@@ -76,7 +76,7 @@ export const TodayPracticeCard: React.FC<TodayPracticeCardProps> = ({
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      stopChineseSpeech();
     };
   }, []);
 
