@@ -55,14 +55,87 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
   const activeTab = getActiveTab();
 
+  // Dynamic Theme Glass styling for each route
+  const getThemeStyles = () => {
+    switch (activeTab) {
+      case 'pronunciation':
+        return {
+          background: 'linear-gradient(180deg, rgba(185, 20, 30, 0.82) 0%, rgba(150, 10, 20, 0.96) 100%)',
+          borderColor: 'rgba(255, 255, 255, 0.22)',
+          inactiveText: 'text-white/70 hover:text-white',
+          activeText: 'text-white font-extrabold',
+          indicator: 'bg-amber-300 shadow-[0_0_10px_rgba(252,211,77,0.6)]',
+          shadow: '0 -10px 30px rgba(100, 0, 10, 0.3)',
+        };
+      case 'grammar':
+        return {
+          background: 'linear-gradient(180deg, rgba(18, 60, 160, 0.85) 0%, rgba(12, 45, 130, 0.96) 100%)',
+          borderColor: 'rgba(255, 255, 255, 0.22)',
+          inactiveText: 'text-blue-100/70 hover:text-white',
+          activeText: 'text-white font-extrabold',
+          indicator: 'bg-amber-300 shadow-[0_0_10px_rgba(252,211,77,0.6)]',
+          shadow: '0 -10px 30px rgba(10, 35, 100, 0.3)',
+        };
+      case 'dictionary':
+        return {
+          background: 'linear-gradient(180deg, rgba(20, 85, 30, 0.85) 0%, rgba(15, 65, 22, 0.96) 100%)',
+          borderColor: 'rgba(255, 255, 255, 0.22)',
+          inactiveText: 'text-emerald-100/70 hover:text-white',
+          activeText: 'text-white font-extrabold',
+          indicator: 'bg-amber-300 shadow-[0_0_10px_rgba(252,211,77,0.6)]',
+          shadow: '0 -10px 30px rgba(10, 50, 15, 0.3)',
+        };
+      case 'flashcard':
+      case 'flashcards':
+        return {
+          background: 'linear-gradient(180deg, rgba(110, 20, 150, 0.85) 0%, rgba(85, 12, 120, 0.96) 100%)',
+          borderColor: 'rgba(255, 255, 255, 0.22)',
+          inactiveText: 'text-purple-100/70 hover:text-white',
+          activeText: 'text-white font-extrabold',
+          indicator: 'bg-amber-300 shadow-[0_0_10px_rgba(252,211,77,0.6)]',
+          shadow: '0 -10px 30px rgba(60, 10, 80, 0.3)',
+        };
+      case 'quiz':
+        return {
+          background: 'linear-gradient(180deg, rgba(210, 70, 0, 0.85) 0%, rgba(175, 50, 0, 0.96) 100%)',
+          borderColor: 'rgba(255, 255, 255, 0.22)',
+          inactiveText: 'text-amber-100/70 hover:text-white',
+          activeText: 'text-white font-extrabold',
+          indicator: 'bg-yellow-300 shadow-[0_0_10px_rgba(253,224,71,0.6)]',
+          shadow: '0 -10px 30px rgba(120, 35, 0, 0.3)',
+        };
+      case 'settings':
+        return {
+          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(10, 15, 30, 0.96) 100%)',
+          borderColor: 'rgba(255, 255, 255, 0.15)',
+          inactiveText: 'text-slate-400 hover:text-white',
+          activeText: 'text-white font-extrabold',
+          indicator: 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.6)]',
+          shadow: '0 -10px 30px rgba(0, 0, 0, 0.4)',
+        };
+      case 'home':
+      default:
+        return {
+          background: 'linear-gradient(180deg, rgba(145, 20, 25, 0.85) 0%, rgba(120, 10, 15, 0.96) 100%)',
+          borderColor: 'rgba(255, 255, 255, 0.22)',
+          inactiveText: 'text-red-100/70 hover:text-white',
+          activeText: 'text-white font-extrabold',
+          indicator: 'bg-amber-300 shadow-[0_0_10px_rgba(252,211,77,0.6)]',
+          shadow: '0 -10px 30px rgba(80, 10, 15, 0.3)',
+        };
+    }
+  };
+
+  const theme = getThemeStyles();
+
   const tabs = [
-    { id: 'home' as NavTab, path: '/', label: 'Trang chủ', icon: Home, colorClass: 'text-[#EF3B32]' },
-    { id: 'pronunciation' as NavTab, path: '/pronunciation', label: 'Phát âm', icon: Mic, colorClass: 'text-[#EF3B32]' },
-    { id: 'quiz' as NavTab, path: '/quiz', label: 'QUIZ', icon: Trophy, colorClass: 'text-[#F57C00]' },
-    { id: 'grammar' as NavTab, path: '/grammar', label: 'Ngữ pháp', icon: BookOpen, colorClass: 'text-[#1E52E8]' },
-    { id: 'dictionary' as NavTab, path: '/dictionary', label: 'Từ điển', icon: BookMarked, colorClass: 'text-[#28B849]' },
-    { id: 'flashcard' as NavTab, path: '/flashcards', label: 'Flashcard', icon: Layers, colorClass: 'text-[#8E24AA]' },
-    { id: 'settings' as NavTab, path: '/settings', label: 'Cài đặt', icon: Settings, colorClass: 'text-slate-700' },
+    { id: 'home' as NavTab, path: '/', label: 'Trang chủ', icon: Home },
+    { id: 'pronunciation' as NavTab, path: '/pronunciation', label: 'Phát âm', icon: Mic },
+    { id: 'quiz' as NavTab, path: '/quiz', label: 'QUIZ', icon: Trophy },
+    { id: 'grammar' as NavTab, path: '/grammar', label: 'Ngữ pháp', icon: BookOpen },
+    { id: 'dictionary' as NavTab, path: '/dictionary', label: 'Từ điển', icon: BookMarked },
+    { id: 'flashcard' as NavTab, path: '/flashcards', label: 'Flashcard', icon: Layers },
+    { id: 'settings' as NavTab, path: '/settings', label: 'Cài đặt', icon: Settings },
   ];
 
   const handleTabClick = (tab: typeof tabs[0]) => {
@@ -83,10 +156,15 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         right: 0,
         zIndex: 50,
         margin: 0,
+        background: theme.background,
+        backdropFilter: 'blur(16px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(16px) saturate(140%)',
+        borderTop: `1px solid ${theme.borderColor}`,
+        boxShadow: theme.shadow,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
       }}
-      className="w-full bg-white/95 backdrop-blur-md border-t border-slate-200/90 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none shadow-[0_-6px_25px_rgba(0,0,0,0.09)]"
+      className="w-full pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none transition-all duration-300"
     >
       {/* Centered inner container matching app max-width */}
       <div className="w-full max-w-[1440px] mx-auto">
@@ -110,8 +188,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                   <Icon
                     className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
                       isActive
-                        ? `${tab.colorClass} stroke-[2.4]`
-                        : 'text-[#8E8E93] stroke-[1.8] group-hover:text-slate-600'
+                        ? 'text-white stroke-[2.4]'
+                        : `${theme.inactiveText} stroke-[1.8]`
                     }`}
                   />
                 </div>
@@ -120,8 +198,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 <span
                   className={`text-[9px] sm:text-[11px] tracking-tight transition-colors duration-200 ${
                     isActive
-                      ? `${tab.colorClass} font-bold`
-                      : 'text-[#8E8E93] font-medium group-hover:text-slate-600'
+                      ? theme.activeText
+                      : theme.inactiveText
                   }`}
                 >
                   {tab.label}
@@ -129,7 +207,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
                 {/* Active Indicator Bar */}
                 {isActive && (
-                  <div className={`w-4 sm:w-6 h-0.5 sm:h-1 rounded-full mt-0.5 bg-current ${tab.colorClass}`} />
+                  <div className={`w-4 sm:w-6 h-0.5 sm:h-1 rounded-full mt-0.5 ${theme.indicator}`} />
                 )}
               </button>
             );
@@ -138,7 +216,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
         {/* Mobile iOS Indicator Bar */}
         <div className="w-full flex justify-center pt-1 pb-0.5 sm:hidden">
-          <div className="w-24 h-1 bg-slate-200 rounded-full" />
+          <div className="w-24 h-1 bg-white/20 rounded-full" />
         </div>
       </div>
     </div>
