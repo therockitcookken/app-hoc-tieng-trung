@@ -88,19 +88,10 @@ export const DictionaryWordCard: React.FC<DictionaryWordCardProps> = ({
       {/* 3D Interactive Tilt Card */}
       <ThreeDCard glowColor="rgba(40, 184, 73, 0.2)" className="bg-white p-4 border border-emerald-100 shadow-md space-y-3">
         {/* Top Word Summary Row */}
-        <div className="flex items-start justify-between space-x-3">
-          {/* Tianzige Calligraphy Grid Box */}
-          <div className="w-16 h-16 bg-[#FAFAFA] rounded-2xl border border-slate-200 flex items-center justify-center flex-shrink-0 relative overflow-hidden shadow-inner">
-            <div
-              className="absolute inset-0 border-r border-b border-dashed border-red-200 pointer-events-none"
-              style={{ left: '50%', top: 0, bottom: 0, width: 0 }}
-            />
-            <div
-              className="absolute inset-0 border-b border-dashed border-red-200 pointer-events-none"
-              style={{ top: '50%', left: 0, right: 0, height: 0 }}
-            />
-
-            <span className="text-3xl font-extrabold text-[#111111] font-serif leading-none relative z-10">
+        <div className="flex items-center justify-between space-x-3">
+          {/* Single Horizontal Line Standard Font Word Container */}
+          <div className="min-w-[4rem] px-3.5 h-14 bg-[#F8FAFC] rounded-2xl border border-slate-200 flex items-center justify-center flex-shrink-0 relative overflow-hidden shadow-inner">
+            <span className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] font-sans tracking-normal leading-none whitespace-nowrap select-text">
               {word.simplified}
             </span>
           </div>
@@ -108,14 +99,14 @@ export const DictionaryWordCard: React.FC<DictionaryWordCardProps> = ({
           {/* Pinyin, HSK & Hán Việt Details */}
           <div className="flex-1 min-w-0 space-y-1">
             <div className="flex items-center space-x-2 flex-wrap">
-              <span className="text-base font-extrabold text-[#D92329] tracking-wide">
+              <span className="text-base font-extrabold text-[#D92329] tracking-wide whitespace-nowrap">
                 {word.pinyin}
               </span>
-              <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap">
                 {word.hskLevel}
               </span>
               {isFactoryWord && (
-                <span className="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full whitespace-nowrap">
                   Công Xưởng
                 </span>
               )}
@@ -127,7 +118,7 @@ export const DictionaryWordCard: React.FC<DictionaryWordCardProps> = ({
           </div>
 
           {/* Audio & Favorite Buttons */}
-          <div className="flex items-center space-x-1.5">
+          <div className="flex items-center space-x-1.5 flex-shrink-0">
             <button
               onClick={handlePlayAudio}
               type="button"
@@ -179,7 +170,7 @@ export const DictionaryWordCard: React.FC<DictionaryWordCardProps> = ({
           <button
             onClick={() => onAddToNotebook?.(word)}
             type="button"
-            className="flex-1 py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-xl border border-emerald-200 flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 transition-transform"
+            className="flex-1 py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-xl border border-emerald-200 flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 transition-transform whitespace-nowrap"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Thêm vào sổ tay</span>
@@ -188,7 +179,7 @@ export const DictionaryWordCard: React.FC<DictionaryWordCardProps> = ({
           <button
             onClick={() => onPracticePronunciation?.(word)}
             type="button"
-            className="flex-1 py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 transition-transform"
+            className="flex-1 py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 transition-transform whitespace-nowrap"
           >
             <Mic className="w-3.5 h-3.5 text-emerald-600" />
             <span>Luyện phát âm</span>

@@ -30,6 +30,9 @@ export const MainFlashcard: React.FC<MainFlashcardProps> = ({
     }
   };
 
+  const vietnameseMeanings = (card as any).vietnameseMeanings;
+  const examples = (card as any).examples;
+
   return (
     <div
       onClick={onFlip}
@@ -45,7 +48,7 @@ export const MainFlashcard: React.FC<MainFlashcardProps> = ({
           <div className="flex flex-col items-center justify-between h-full space-y-4 text-center my-auto">
             {/* Top Bar: HSK Badge & Favorite */}
             <div className="w-full flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full whitespace-nowrap">
                 {card.hskLevel || 'Thẻ Học'}
               </span>
 
@@ -61,12 +64,9 @@ export const MainFlashcard: React.FC<MainFlashcardProps> = ({
               </button>
             </div>
 
-            {/* Tianzige Calligraphy Character Box */}
-            <div className="w-24 h-24 bg-[#FAFAFA] rounded-2xl border border-slate-200 flex items-center justify-center relative overflow-hidden shadow-inner my-2">
-              <div className="absolute inset-0 border-r border-b border-dashed border-red-200 pointer-events-none" style={{ left: '50%', top: 0, bottom: 0, width: 0 }} />
-              <div className="absolute inset-0 border-b border-dashed border-red-200 pointer-events-none" style={{ top: '50%', left: 0, right: 0, height: 0 }} />
-
-              <span className="text-5xl font-extrabold text-slate-900 font-serif leading-none relative z-10">
+            {/* Single Horizontal Line Standard Font Word Container */}
+            <div className="px-6 py-3.5 bg-[#F8FAFC] rounded-2xl border border-slate-200 flex items-center justify-center relative overflow-hidden shadow-inner my-2 min-w-[8rem] max-w-full">
+              <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 font-sans tracking-normal leading-none whitespace-nowrap">
                 {card.simplified}
               </span>
             </div>
@@ -75,13 +75,13 @@ export const MainFlashcard: React.FC<MainFlashcardProps> = ({
             <button
               onClick={handleAudio}
               type="button"
-              className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center space-x-1.5 cursor-pointer active:scale-95 transition-transform"
+              className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center space-x-1.5 cursor-pointer active:scale-95 transition-transform whitespace-nowrap"
             >
               <Volume2 className="w-4 h-4" />
               <span>Nghe âm chuẩn</span>
             </button>
 
-            <span className="text-[11px] text-slate-400 font-medium flex items-center space-x-1 pt-2">
+            <span className="text-[11px] text-slate-400 font-medium flex items-center space-x-1 pt-2 whitespace-nowrap">
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Chạm thẻ để lật xem nghĩa</span>
             </span>
@@ -90,39 +90,33 @@ export const MainFlashcard: React.FC<MainFlashcardProps> = ({
           /* BACK SIDE */
           <div className="flex flex-col justify-between h-full space-y-3 text-left my-auto animate-fade-in">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <span className="text-xl font-black text-slate-900 font-serif">
+              <span className="text-2xl font-extrabold text-slate-900 font-sans tracking-normal whitespace-nowrap">
                 {card.simplified}
               </span>
-              <span className="text-sm font-extrabold text-emerald-600">
+              <span className="text-sm font-extrabold text-emerald-600 whitespace-nowrap">
                 {card.pinyin}
               </span>
             </div>
 
-            {/* Definition */}
-            <div className="bg-emerald-50/80 p-3 rounded-xl border border-emerald-200 space-y-1">
-              <span className="text-[10.5px] font-bold text-emerald-800 uppercase tracking-wider block">
+            {/* Meanings */}
+            <div className="space-y-1">
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
                 Nghĩa tiếng Việt:
               </span>
-              <p className="text-sm font-extrabold text-slate-900 leading-snug">
-                {card.vietnamese}
+              <p className="text-base font-extrabold text-slate-800">
+                {vietnameseMeanings?.join(', ') || card.vietnamese}
               </p>
             </div>
 
-            {/* Audio & Flip Prompt */}
-            <div className="flex items-center justify-between pt-2">
-              <button
-                onClick={handleAudio}
-                type="button"
-                className="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center space-x-1 shadow-xs active:scale-95 transition-transform cursor-pointer"
-              >
-                <Volume2 className="w-3.5 h-3.5" />
-                <span>Phát âm</span>
-              </button>
-
-              <span className="text-[10.5px] text-slate-400 font-medium">
-                Chạm để lật lại mặt trước
-              </span>
-            </div>
+            {/* Example Sentences */}
+            {examples && examples.length > 0 && (
+              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs space-y-1">
+                <span className="font-bold text-slate-500">Ví dụ:</span>
+                <p className="text-slate-800 font-medium">{examples[0].chinese}</p>
+                <p className="text-emerald-700">{examples[0].pinyin}</p>
+                <p className="text-slate-600">{examples[0].vietnamese}</p>
+              </div>
+            )}
           </div>
         )}
       </div>
