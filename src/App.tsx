@@ -24,7 +24,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <main className="min-h-screen w-full bg-slate-900 flex flex-col items-center justify-start overflow-x-hidden selection:bg-red-500 selection:text-white">
+        <main className="min-h-screen w-full bg-slate-900 flex flex-col items-center justify-start selection:bg-red-500 selection:text-white">
           {/* Toast Notification Banner */}
           {toastMessage && (
             <div className="fixed top-4 z-50 animate-bounce transition-all">
