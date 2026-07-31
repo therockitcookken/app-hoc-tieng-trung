@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 interface ThreeDCardProps {
   children: React.ReactNode;
@@ -15,9 +15,9 @@ export const ThreeDCard: React.FC<ThreeDCardProps> = ({
   onClick,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState('rotateX(0deg) rotateY(0deg) scale(1)');
-  const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50, opacity: 0 });
+  const glareRef = useRef<HTMLDivElement>(null);
 
+  // Ultra-fast direct DOM manipulation without triggering React re-renders on mousemove
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -27,19 +27,28 @@ export const ThreeDCard: React.FC<ThreeDCardProps> = ({
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -8; // Max 8deg tilt
-    const rotateY = ((x - centerX) / centerX) * 8;
+    const rotateX = ((y - centerY) / centerY) * -6; // Max 6deg tilt
+    const rotateY = ((x - centerX) / centerX) * 6;
 
-    const glareX = (x / rect.width) * 100;
-    const glareY = (y / rect.height) * 100;
+    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+    cardRef.current.style.boxShadow = `0 15px 30px -10px ${glowColor}`;
 
-    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`);
-    setGlarePosition({ x: glareX, y: glareY, opacity: 0.25 });
+    if (glareRef.current) {
+      const glareX = (x / rect.width) * 100;
+      const glareY = (y / rect.height) * 100;
+      glareRef.current.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.3) 0%, transparent 70%)`;
+      glareRef.current.style.opacity = '1';
+    }
   };
 
   const handleMouseLeave = () => {
-    setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)');
-    setGlarePosition({ x: 50, y: 50, opacity: 0 });
+    if (!cardRef.current) return;
+    cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+    cardRef.current.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1)';
+
+    if (glareRef.current) {
+      glareRef.current.style.opacity = '0';
+    }
   };
 
   return (
@@ -49,27 +58,18 @@ export const ThreeDCard: React.FC<ThreeDCardProps> = ({
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
       style={{
-        transform,
         transition: 'transform 0.15s ease-out, box-shadow 0.2s ease-out',
         transformStyle: 'preserve-3d',
-        boxShadow: glarePosition.opacity > 0
-          ? `0 20px 40px -10px ${glowColor}, 0 0 20px -5px ${glowColor}`
-          : '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
       }}
       className={`relative rounded-2xl overflow-hidden cursor-pointer ${className}`}
     >
-      {/* 3D Light Glare Effect Overlay */}
-      <div
-        className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(circle at ${glarePosition.x}% ${glarePosition.y}%, rgba(255, 255, 255, ${glarePosition.opacity}) 0%, transparent 65%)`,
-        }}
-      />
+      {children}
 
-      {/* Card Content with 3D TranslateZ depth */}
-      <div className="relative z-10 w-full h-full transform-style-3d">
-        {children}
-      </div>
+      {/* Dynamic Light Glare Overlay */}
+      <div
+        ref={glareRef}
+        className="pointer-events-none absolute inset-0 transition-opacity duration-200 opacity-0"
+      />
     </div>
   );
 };

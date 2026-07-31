@@ -16,6 +16,18 @@ export interface RawCoreItem {
   exampleVn: string;
 }
 
+// Fast tone stripping helper without heavy NFD regex overhead
+function fastNormalizePinyin(pinyin: string): string {
+  return pinyin
+    .toLowerCase()
+    .replace(/[āáǎà]/g, 'a')
+    .replace(/[ōóǒò]/g, 'o')
+    .replace(/[ēéěè]/g, 'e')
+    .replace(/[īíǐì]/g, 'i')
+    .replace(/[ūúǔù]/g, 'u')
+    .replace(/[ǖǘǚǜü]/g, 'v');
+}
+
 // Comprehensive Curated Pool of 2,000 Real Chinese Words (1, 2, or 3 characters only, no artificial phrase concatenation)
 const AUTHENTIC_WORDS_POOL: Omit<RawCoreItem, 'id'>[] = [
   // --- 1. GIAO TIẾP & THÔNG DỤNG (EVERYDAY COMMUNICATION) ---
@@ -88,8 +100,14 @@ const AUTHENTIC_WORDS_POOL: Omit<RawCoreItem, 'id'>[] = [
   { simplified: '损耗', pinyin: 'sǔnhào', vietnamese: 'Hao hụt, Tổn hao', partOfSpeech: 'Danh từ (N)', hskLevel: 'HSK 5', isFactoryVocabulary: true, categoryTag: 'cong-xuong', exampleCh: '控制原材料的损耗。', examplePy: 'Kòngzhì yuáncáiliào de sǔnhào.', exampleVn: 'Kiểm soát mức hao hụt của nguyên vật liệu.' },
 ];
 
+let _cachedCore2000Entries: DictionaryEntry[] | null = null;
+
 // Rich vocabulary builder to generate exactly 2000 unique authentic 1-3 character Chinese words
 export function generateCore2000Entries(): DictionaryEntry[] {
+  if (_cachedCore2000Entries) {
+    return _cachedCore2000Entries;
+  }
+
   const result: DictionaryEntry[] = [];
   const existingSet = new Set<string>();
 
@@ -106,7 +124,7 @@ export function generateCore2000Entries(): DictionaryEntry[] {
       traditional: item.simplified,
       pinyin: item.pinyin,
       numberedPinyin: item.pinyin,
-      normalizedPinyin: item.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(),
+      normalizedPinyin: fastNormalizePinyin(item.pinyin),
       audioText: item.simplified,
       strokeCount: item.simplified.length * 3 + 2,
       radical: item.simplified[0] || '工',
@@ -212,7 +230,7 @@ export function generateCore2000Entries(): DictionaryEntry[] {
       traditional: item.s,
       pinyin: item.py,
       numberedPinyin: item.py,
-      normalizedPinyin: item.py.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(),
+      normalizedPinyin: fastNormalizePinyin(item.py),
       audioText: item.s,
       strokeCount: item.s.length * 3 + 2,
       radical: item.s[0] || '工',
@@ -328,7 +346,7 @@ export function generateCore2000Entries(): DictionaryEntry[] {
         traditional: wordSimplified,
         pinyin: `${prefix.py} ${root.py}`,
         numberedPinyin: `${prefix.py} ${root.py}`,
-        normalizedPinyin: `${prefix.py} ${root.py}`.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(),
+        normalizedPinyin: fastNormalizePinyin(`${prefix.py} ${root.py}`),
         audioText: wordSimplified,
         strokeCount: wordSimplified.length * 4 + 1,
         radical: wordSimplified[0] || '工',
@@ -367,7 +385,8 @@ export function generateCore2000Entries(): DictionaryEntry[] {
     }
   }
 
-  return result.slice(0, 2000);
+  _cachedCore2000Entries = result.slice(0, 2000);
+  return _cachedCore2000Entries;
 }
 
 export const CORE_2000_DICTIONARY_ENTRIES: DictionaryEntry[] = generateCore2000Entries();
