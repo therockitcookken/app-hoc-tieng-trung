@@ -1,118 +1,44 @@
-import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import React from 'react';
 
 interface ThreeDBackgroundCanvasProps {
   variant?: 'red' | 'blue' | 'green' | 'purple' | 'orange';
 }
 
 export const ThreeDBackgroundCanvas: React.FC<ThreeDBackgroundCanvasProps> = ({ variant = 'red' }) => {
-  const mountRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!mountRef.current) return;
-
-    const width = mountRef.current.clientWidth || window.innerWidth;
-    const height = mountRef.current.clientHeight || window.innerHeight;
-
-    let renderer: THREE.WebGLRenderer | null = null;
-    let animationFrameId: number;
-
-    try {
-      // 1. Scene setup
-      const scene = new THREE.Scene();
-
-      // 2. Camera setup
-      const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-      camera.position.z = 30;
-
-      // 3. Renderer setup with safe WebGL fallback
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(1);
-      mountRef.current.appendChild(renderer.domElement);
-
-      // 4. Color Palette
-      const getColor = () => {
-        switch (variant) {
-          case 'blue': return 0x3b82f6;
-          case 'green': return 0x10b981;
-          case 'purple': return 0xa855f7;
-          case 'orange': return 0xf97316;
-          case 'red':
-          default: return 0xf43f5e;
-        }
-      };
-
-      const primaryColor = getColor();
-
-      // 5. Create Lightweight 3D Floating Particles
-      const particleCount = 60;
-      const geometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(particleCount * 3);
-
-      for (let i = 0; i < particleCount * 3; i += 3) {
-        positions[i] = (Math.random() - 0.5) * 70;
-        positions[i + 1] = (Math.random() - 0.5) * 70;
-        positions[i + 2] = (Math.random() - 0.5) * 30;
-      }
-
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-      const material = new THREE.PointsMaterial({
-        color: primaryColor,
-        size: 1.5,
-        transparent: true,
-        opacity: 0.6,
-        depthWrite: false,
-      });
-
-      const particles = new THREE.Points(geometry, material);
-      scene.add(particles);
-
-      // 6. Animation Loop
-      let clock = new THREE.Clock();
-
-      const animate = () => {
-        animationFrameId = requestAnimationFrame(animate);
-        const elapsedTime = clock.getElapsedTime();
-
-        particles.rotation.y = elapsedTime * 0.03;
-        particles.rotation.x = elapsedTime * 0.02;
-
-        if (renderer) {
-          renderer.render(scene, camera);
-        }
-      };
-
-      animate();
-
-      // 7. Cleanup
-      return () => {
-        cancelAnimationFrame(animationFrameId);
-        if (mountRef.current && renderer && renderer.domElement) {
-          try {
-            mountRef.current.removeChild(renderer.domElement);
-          } catch {
-            // Element already removed
-          }
-        }
-        geometry.dispose();
-        material.dispose();
-        if (renderer) {
-          renderer.dispose();
-          renderer.forceContextLoss();
-        }
-      };
-    } catch {
-      // Graceful fallback if WebGL is unavailable or restricted in browser
-      return () => {};
+  const getParticleGlow = () => {
+    switch (variant) {
+      case 'blue': return 'bg-blue-400/20';
+      case 'green': return 'bg-emerald-400/20';
+      case 'purple': return 'bg-purple-400/20';
+      case 'orange': return 'bg-amber-400/20';
+      case 'red':
+      default: return 'bg-rose-400/20';
     }
-  }, [variant]);
+  };
 
+  const glowClass = getParticleGlow();
+
+  // Ultra-lightweight CSS 3D Particle Constellation (0 WebGL / 0 CPU overhead)
   return (
-    <div
-      ref={mountRef}
-      className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
-    />
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
+      {/* Layer 1: Floating Glowing Nodes */}
+      <div className={`absolute top-1/4 left-1/5 w-64 h-64 ${glowClass} rounded-full blur-3xl animate-pulse-slow`} />
+      <div className={`absolute bottom-1/3 right-1/4 w-80 h-80 ${glowClass} rounded-full blur-3xl animate-pulse-slow`} />
+
+      {/* Layer 2: Floating 3D Sparkle Nodes */}
+      <div className="absolute top-12 left-1/4 w-2 h-2 rounded-full bg-white/60 animate-sparkle" />
+      <div className="absolute top-1/3 right-12 w-3 h-3 rounded-full bg-white/50 animate-sparkle" />
+      <div className="absolute bottom-1/4 left-16 w-2.5 h-2.5 rounded-full bg-white/40 animate-sparkle" />
+      <div className="absolute bottom-12 right-1/3 w-3 h-3 rounded-full bg-white/60 animate-sparkle" />
+
+      {/* Layer 3: Geometry Polygons */}
+      <svg className="absolute top-10 left-10 w-24 h-24 opacity-20 text-white animate-float-3d" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" strokeWidth="1.5" />
+      </svg>
+
+      <svg className="absolute bottom-16 right-10 w-28 h-28 opacity-15 text-white animate-float-3d" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <polygon points="50,10 90,90 10,90" strokeWidth="1.5" />
+      </svg>
+    </div>
   );
 };
