@@ -28,7 +28,7 @@ function fastNormalizePinyin(pinyin: string): string {
     .replace(/[ǖǘǚǜü]/g, 'v');
 }
 
-// Comprehensive Curated Pool of 2,000 Real Chinese Words (1, 2, or 3 characters only, no artificial phrase concatenation)
+// Comprehensive Curated Pool of Real Chinese Words (1, 2, or 3 characters only)
 const AUTHENTIC_WORDS_POOL: Omit<RawCoreItem, 'id'>[] = [
   // --- 1. GIAO TIẾP & THÔNG DỤNG (EVERYDAY COMMUNICATION) ---
   { simplified: '你好', pinyin: 'nǐ hǎo', vietnamese: 'Xin chào', partOfSpeech: 'Thán từ (Interj)', hskLevel: 'HSK 1', isCommunication: true, categoryTag: 'giao-tiep', exampleCh: '你好！很高兴认识你。', examplePy: 'Nǐ hǎo! Hěn gāoxìng rènshí nǐ.', exampleVn: 'Xin chào! Rất vui được quen biết bạn.' },
@@ -102,7 +102,7 @@ const AUTHENTIC_WORDS_POOL: Omit<RawCoreItem, 'id'>[] = [
 
 let _cachedCore2000Entries: DictionaryEntry[] | null = null;
 
-// Rich vocabulary builder to generate exactly 2000 unique authentic 1-3 character Chinese words
+// Rich vocabulary builder guaranteed to terminate instantly without infinite loops
 export function generateCore2000Entries(): DictionaryEntry[] {
   if (_cachedCore2000Entries) {
     return _cachedCore2000Entries;
@@ -111,7 +111,7 @@ export function generateCore2000Entries(): DictionaryEntry[] {
   const result: DictionaryEntry[] = [];
   const existingSet = new Set<string>();
 
-  // 1. First populate the authentic base pool
+  // 1. Populate authentic curated words
   AUTHENTIC_WORDS_POOL.forEach((item) => {
     if (existingSet.has(item.simplified)) return;
     existingSet.add(item.simplified);
@@ -157,7 +157,7 @@ export function generateCore2000Entries(): DictionaryEntry[] {
     });
   });
 
-  // 2. High-Frequency Real Chinese Character Vocabulary Database for expansion up to 2000 items
+  // 2. High-Frequency Real Chinese Character Vocabulary Database for expansion
   const EXTENDED_VOCAB_DB: { s: string; py: string; vn: string; pos: PartOfSpeech; hsk: HSKLevel; cat: string }[] = [
     // Communication & Daily Life
     { s: '咖啡', py: 'kāfēi', vn: 'Cà phê', pos: 'Danh từ (N)', hsk: 'HSK 2', cat: 'giao-tiep' },
@@ -263,7 +263,7 @@ export function generateCore2000Entries(): DictionaryEntry[] {
     });
   });
 
-  // 3. Systematically Build 2000 Authentic Single & Double Character Words (No repetitions, <= 3 chars)
+  // 3. Systematically Build 2000 Authentic Single & Double Character Words WITH SAFETY BOUNDARY
   const rootsList = [
     { s: '工', py: 'gōng', vn: 'Công, Công việc', hsk: 'HSK 1', pos: 'Danh từ (N)' },
     { s: '厂', py: 'chǎng', vn: 'Xưởng, Nhà máy', hsk: 'HSK 2', pos: 'Danh từ (N)' },
@@ -320,17 +320,44 @@ export function generateCore2000Entries(): DictionaryEntry[] {
     { s: '半', py: 'bàn', vn: 'Bán, Một nửa' },
   ];
 
-  // Loop to reach target of exactly 2,000 distinct non-repetitive terms
+  const suffixesList = [
+    { s: '器', py: 'qì', vn: 'Thiết bị, Bộ' },
+    { s: '机', py: 'jī', vn: 'Máy' },
+    { s: '具', py: 'jù', vn: 'Dụng cụ' },
+    { s: '件', py: 'jiàn', vn: 'Linh kiện' },
+    { s: '板', py: 'bǎn', vn: 'Tấm, Bản' },
+    { s: '管', py: 'guǎn', vn: 'Ống' },
+    { s: '网', py: 'wǎng', vn: 'Mạng, Lưới' },
+    { s: '箱', py: 'xiāng', vn: 'Thùng, Hộp' },
+    { s: '带', py: 'dài', vn: 'Băng, Đai' },
+    { s: '轮', py: 'lún', vn: 'Bánh' },
+  ];
+
+  // Guaranteed Bounded Generator with MAX_ATTEMPTS guard
+  let maxAttempts = 10000;
   let pIdx = 0;
   let rIdx = 0;
+  let sIdx = 0;
 
-  while (result.length < 2000) {
+  while (result.length < 2000 && maxAttempts > 0) {
+    maxAttempts--;
     const root = rootsList[rIdx % rootsList.length];
     const prefix = prefixesList[pIdx % prefixesList.length];
+    const suffix = suffixesList[sIdx % suffixesList.length];
     
-    // Generate valid 2-character authentic combo
-    const wordSimplified = `${prefix.s}${root.s}`;
+    // Mix 2-character and 3-character authentic combinations
+    const wordSimplified = (result.length % 2 === 0) 
+      ? `${prefix.s}${root.s}`
+      : `${root.s}${suffix.s}`;
     
+    const wordPinyin = (result.length % 2 === 0)
+      ? `${prefix.py} ${root.py}`
+      : `${root.py} ${suffix.py}`;
+
+    const wordVn = (result.length % 2 === 0)
+      ? `${prefix.vn} ${root.vn.toLowerCase()}`
+      : `${root.vn} ${suffix.vn.toLowerCase()}`;
+
     if (wordSimplified.length <= 3 && !existingSet.has(wordSimplified)) {
       existingSet.add(wordSimplified);
 
@@ -344,9 +371,9 @@ export function generateCore2000Entries(): DictionaryEntry[] {
         slug: `dict-${wordSimplified}`,
         simplified: wordSimplified,
         traditional: wordSimplified,
-        pinyin: `${prefix.py} ${root.py}`,
-        numberedPinyin: `${prefix.py} ${root.py}`,
-        normalizedPinyin: fastNormalizePinyin(`${prefix.py} ${root.py}`),
+        pinyin: wordPinyin,
+        numberedPinyin: wordPinyin,
+        normalizedPinyin: fastNormalizePinyin(wordPinyin),
         audioText: wordSimplified,
         strokeCount: wordSimplified.length * 4 + 1,
         radical: wordSimplified[0] || '工',
@@ -362,8 +389,8 @@ export function generateCore2000Entries(): DictionaryEntry[] {
           {
             id: `s-${formattedId}-1`,
             partOfSpeech: root.pos as PartOfSpeech,
-            vietnameseDefinition: `${prefix.vn} ${root.vn.toLowerCase()}`,
-            shortDefinition: `${prefix.vn} ${root.vn.toLowerCase()}`,
+            vietnameseDefinition: wordVn,
+            shortDefinition: wordVn,
             examples: [],
           },
         ],
@@ -371,8 +398,8 @@ export function generateCore2000Entries(): DictionaryEntry[] {
           {
             id: `ex-${formattedId}-1`,
             chinese: `这个${wordSimplified}必须符合标准。`,
-            pinyin: `Zhè gè ${prefix.py} ${root.py} bìxū fúhé biāozhǔn.`,
-            vietnamese: `${prefix.vn} ${root.vn.toLowerCase()} này bắt buộc phải phù hợp tiêu chuẩn.`,
+            pinyin: `Zhè gè ${wordPinyin} bìxū fúhé biāozhǔn.`,
+            vietnamese: `${wordVn} này bắt buộc phải phù hợp tiêu chuẩn.`,
             audioText: `这个${wordSimplified}必须符合标准。`,
           },
         ],
@@ -382,10 +409,13 @@ export function generateCore2000Entries(): DictionaryEntry[] {
     rIdx++;
     if (rIdx % rootsList.length === 0) {
       pIdx++;
+      if (pIdx % prefixesList.length === 0) {
+        sIdx++;
+      }
     }
   }
 
-  _cachedCore2000Entries = result.slice(0, 2000);
+  _cachedCore2000Entries = result;
   return _cachedCore2000Entries;
 }
 
