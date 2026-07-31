@@ -157,18 +157,22 @@ export const DictionaryWordCard: React.FC<DictionaryWordCardProps> = ({
           <button
             onClick={() => onAddToNotebook?.(word)}
             type="button"
-            className="flex-1 py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-xl border border-emerald-200 flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 transition-transform whitespace-nowrap"
+            className="group flex-1 py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-xl border border-emerald-200 flex items-center justify-center space-x-2 cursor-pointer transition-spring active:scale-95 whitespace-nowrap shadow-xs"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <div className="w-5 h-5 rounded-full bg-emerald-200/60 flex items-center justify-center transition-transform group-hover:scale-110">
+              <Plus className="w-3 h-3 text-emerald-800" />
+            </div>
             <span>Thêm vào sổ tay</span>
           </button>
 
           <button
             onClick={() => onPracticePronunciation?.(word)}
             type="button"
-            className="flex-1 py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 transition-transform whitespace-nowrap"
+            className="group flex-1 py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-2 cursor-pointer transition-spring active:scale-95 whitespace-nowrap shadow-xs"
           >
-            <Mic className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="w-5 h-5 rounded-full bg-slate-200/70 flex items-center justify-center transition-transform group-hover:scale-110">
+              <Mic className="w-3 h-3 text-slate-800" />
+            </div>
             <span>Luyện phát âm</span>
           </button>
         </div>

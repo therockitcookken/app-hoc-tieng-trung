@@ -42,12 +42,17 @@
     min-height: 100dvh;
     margin: 0;
     padding: 0;
-    background-color: #0b1329;
-    background-image: radial-gradient(circle at top, rgba(30, 41, 59, 0.7) 0%, #060b18 100%);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #1e293b;
+    background-color: #080d1a;
+    background-image: 
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(220, 38, 38, 0.15), transparent 100%),
+      radial-gradient(circle at 80% 90%, rgba(37, 99, 235, 0.1), transparent 60%),
+      radial-gradient(circle at top, rgba(30, 41, 59, 0.7) 0%, #060b18 100%);
+    font-family: 'Plus Jakarta Sans', 'Outfit', system-ui, -apple-system, sans-serif;
+    color: #0f172a;
     overflow-x: clip;
     overflow-y: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   #root {
@@ -248,3 +253,74 @@
 .glow-feature {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }
+
+/* ==========================================================================
+   HIGH-END VISUAL DESIGN SYSTEM (Awwwards / Linear-Tier)
+   ========================================================================== */
+
+/* Custom Kinetic Spring Transitions */
+.transition-spring {
+  transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.transition-bounce-subtle {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Double-Bezel (Doppelrand) Architecture Outer Shell */
+.bezel-outer-shell {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.375rem;
+  border-radius: 1.75rem;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.bezel-inner-core {
+  background: #ffffff;
+  border-radius: calc(1.75rem - 0.375rem);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Island Floating Navigation Glass */
+.floating-glass-island {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Kinetic Floating Eyebrow Pill */
+.eyebrow-pill {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Button-in-Button Trailing Icon Wrapper */
+.btn-nested-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.group:hover .btn-nested-icon {
+  transform: scale(1.1) translateX(2px);
+}
+

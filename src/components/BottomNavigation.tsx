@@ -150,30 +150,29 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     <div
       style={{
         position: 'fixed',
-        bottom: 0,
+        bottom: '8px',
         left: 0,
         right: 0,
         zIndex: 50,
         pointerEvents: 'none',
         margin: 0,
-        padding: 0,
+        padding: '0 8px',
       }}
       className="w-full flex justify-center"
     >
-      {/* Centered nav bar matching exact app content surface width (max-w-[1440px]) */}
+      {/* Centered Floating Island Nav Bar matching exact app content surface width */}
       <div
         ref={navRef}
         style={{
           pointerEvents: 'auto',
           background: theme.background,
-          backdropFilter: 'blur(16px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(16px) saturate(140%)',
-          borderTop: `1px solid ${theme.borderColor}`,
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          border: `1px solid ${theme.borderColor}`,
           boxShadow: theme.shadow,
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
+          borderRadius: '24px',
         }}
-        className="w-full max-w-[1440px] mx-auto pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none transition-all duration-300"
+        className="w-full max-w-[1380px] mx-auto pt-2 pb-[calc(0.4rem+env(safe-area-inset-bottom,0px))] px-2 sm:px-4 select-none transition-all duration-300 transform-gpu"
       >
         {/* 7 Tabs Row Container */}
         <div className="flex items-center justify-around max-w-5xl mx-auto">
@@ -188,24 +187,24 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 key={tab.id}
                 onClick={() => handleTabClick(tab)}
                 type="button"
-                className="flex flex-col items-center justify-center flex-1 py-1 group cursor-pointer transition-all duration-150 active:scale-95 relative"
+                className="flex flex-col items-center justify-center flex-1 py-1 group cursor-pointer transition-spring active:scale-90 relative"
               >
                 {/* Icon Container */}
-                <div className="relative flex items-center justify-center mb-0.5">
+                <div className={`relative flex items-center justify-center mb-0.5 p-1 rounded-xl transition-all duration-200 ${isActive ? 'bg-white/15 scale-110 shadow-inner' : 'group-hover:bg-white/10'}`}>
                   <Icon
-                    className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
+                    className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${
                       isActive
-                        ? 'text-white stroke-[2.4]'
-                        : `${theme.inactiveText} stroke-[1.8]`
+                        ? 'text-white stroke-[2.5] scale-105'
+                        : `${theme.inactiveText} stroke-[1.8] group-hover:scale-105`
                     }`}
                   />
                 </div>
 
                 {/* Label */}
                 <span
-                  className={`text-[9px] sm:text-[11px] tracking-tight transition-colors duration-200 ${
+                  className={`text-[9px] sm:text-[11px] tracking-tight transition-all duration-200 ${
                     isActive
-                      ? theme.activeText
+                      ? `${theme.activeText} scale-105`
                       : theme.inactiveText
                   }`}
                 >
@@ -214,7 +213,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
                 {/* Active Indicator Bar */}
                 {isActive && (
-                  <div className={`w-4 sm:w-6 h-0.5 sm:h-1 rounded-full mt-0.5 ${theme.indicator}`} />
+                  <div className={`w-4 sm:w-6 h-0.5 sm:h-1 rounded-full mt-0.5 ${theme.indicator} animate-pulse-slow`} />
                 )}
               </button>
             );
@@ -223,7 +222,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
         {/* Mobile iOS Indicator Bar */}
         <div className="w-full flex justify-center pt-1 pb-0.5 sm:hidden">
-          <div className="w-24 h-1 bg-white/20 rounded-full" />
+          <div className="w-20 h-1 bg-white/30 rounded-full" />
         </div>
       </div>
     </div>
