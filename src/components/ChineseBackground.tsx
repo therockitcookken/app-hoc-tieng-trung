@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThreeDBackgroundCanvas } from './3d/ThreeDBackgroundCanvas';
 
 interface ChineseBackgroundProps {
   variant?: 'red' | 'blue' | 'green' | 'purple' | 'orange';
@@ -31,11 +32,14 @@ export const ChineseBackground: React.FC<ChineseBackgroundProps> = ({ variant = 
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 rounded-[inherit]">
-      {/* Base Gradient */}
+      {/* Base Gradient Layer */}
       <div 
         className="absolute inset-0 w-full h-full transition-colors duration-500"
         style={{ background: getGradient() }}
       />
+
+      {/* 3D WebGL Floating Constellation Canvas Layer */}
+      <ThreeDBackgroundCanvas variant={variant} />
 
       {/* Top Right Chinese Pagoda / Temple Roof Silhouette */}
       <svg
@@ -58,32 +62,6 @@ export const ChineseBackground: React.FC<ChineseBackgroundProps> = ({ variant = 
         <path d="M0 25 C20 25 40 40 65 42 C72 43 85 37 90 30 C75 24 50 12 25 10 C10 8 0 15 0 25 Z" />
         <path d="M0 55 C25 55 50 72 80 75 C90 76 105 70 115 60 C95 52 65 38 35 32 C15 28 0 35 0 55 Z" />
       </svg>
-
-      {/* Fireworks & Glowing Sparks Effect */}
-      <div className="absolute top-2 left-1/3 w-2 h-2 rounded-full bg-amber-300 opacity-80 blur-[0.5px] animate-sparkle" />
-      <div className="absolute top-6 left-1/2 w-1.5 h-1.5 rounded-full bg-yellow-200 opacity-90 animate-sparkle" style={{ animationDelay: '0.7s' }} />
-      <div className="absolute top-16 left-28 w-2 h-2 rounded-full bg-amber-200 opacity-70 animate-sparkle" style={{ animationDelay: '1.2s' }} />
-      <div className="absolute top-4 right-1/3 w-3 h-3 rounded-full bg-yellow-400 opacity-60 blur-[1px] animate-sparkle" style={{ animationDelay: '1.8s' }} />
-      
-      {/* Decorative Firework burst lines */}
-      <svg className="absolute top-1 left-24 w-12 h-12 text-amber-300/40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <line x1="20" y1="5" x2="20" y2="12" />
-        <line x1="20" y1="28" x2="20" y2="35" />
-        <line x1="5" y1="20" x2="12" y2="20" />
-        <line x1="28" y1="20" x2="35" y2="20" />
-        <line x1="9" y1="9" x2="14" y2="14" />
-        <line x1="26" y1="26" x2="31" y2="31" />
-        <line x1="9" y1="31" x2="14" y2="26" />
-        <line x1="26" y1="14" x2="31" y2="9" />
-      </svg>
-
-      {/* Subtle Bottom Glow Overlay */}
-      <div className={`absolute bottom-20 -right-10 w-48 h-48 rounded-full blur-2xl ${
-        variant === 'purple' ? 'bg-purple-400/10' : variant === 'orange' ? 'bg-amber-400/15' : variant === 'green' ? 'bg-emerald-400/10' : 'bg-orange-400/10'
-      }`} />
-      <div className={`absolute top-36 -left-10 w-40 h-40 rounded-full blur-xl ${
-        variant === 'purple' ? 'bg-[#A73CEB]/10' : variant === 'orange' ? 'bg-amber-500/10' : variant === 'green' ? 'bg-teal-400/10' : 'bg-red-400/10'
-      }`} />
     </div>
   );
 };
