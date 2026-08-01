@@ -8,6 +8,7 @@ import { DictionaryWordCard } from '../components/dictionary/DictionaryWordCard'
 import { EssentialCommunicationSection } from '../components/dictionary/EssentialCommunicationSection';
 import { DictionaryWordDetail } from '../components/dictionary/DictionaryWordDetail';
 import { BottomNavigation } from '../components/BottomNavigation';
+import { DictionaryCategorySubPageSlideOver, DictionaryCategoryTab } from '../components/dictionary/DictionaryCategorySubPageSlideOver';
 import { DICTIONARY_ENTRIES_DATA } from '../data/dictionary/dictionaryEntriesData';
 import { CONFUSING_WORDS_DATA } from '../data/dictionary/confusingWordsData';
 import { DictionaryEntry } from '../types/dictionary';
@@ -33,6 +34,7 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<DictionaryTab>('search');
   const [selectedEntry, setSelectedEntry] = useState<DictionaryEntry | null>(null);
+  const [activeCategorySubPage, setActiveCategorySubPage] = useState<DictionaryCategoryTab | null>(null);
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -53,6 +55,15 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleTabClick = (tabId: DictionaryTab) => {
+    if (tabId === 'search') {
+      setActiveTab('search');
+      setActiveCategorySubPage(null);
+    } else {
+      setActiveCategorySubPage(tabId as DictionaryCategoryTab);
+    }
   };
 
   // Reset page to 1 whenever tab changes
@@ -106,13 +117,11 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
           <div className="py-2 mb-3">
             <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
               {tabs.map((t) => {
-                const isActive = activeTab === t.id;
+                const isActive = activeTab === t.id && !activeCategorySubPage;
                 return (
                   <button
                     key={t.id}
-                    onClick={() => {
-                      setActiveTab(t.id);
-                    }}
+                    onClick={() => handleTabClick(t.id)}
                     type="button"
                     className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
                       isActive
@@ -220,6 +229,15 @@ export const DictionaryPage: React.FC<DictionaryPageProps> = ({ showToast }) => 
         isOpen={!!selectedEntry}
         onClose={() => setSelectedEntry(null)}
         entry={selectedEntry}
+        showToast={showToast}
+      />
+
+      {/* Category Sub-Page Slide-Over Panel */}
+      <DictionaryCategorySubPageSlideOver
+        isOpen={!!activeCategorySubPage}
+        onClose={() => setActiveCategorySubPage(null)}
+        categoryTab={activeCategorySubPage}
+        onSelectEntry={(entry) => setSelectedEntry(entry)}
         showToast={showToast}
       />
     </div>

@@ -19,6 +19,7 @@ import { GrammarSearch } from '../components/grammar/GrammarSearch';
 import { GrammarComparisonModule } from '../components/grammar/GrammarComparisonModule';
 import { FactoryGrammarSection } from '../components/grammar/FactoryGrammarSection';
 import { GrammarDetailPanel } from '../components/grammar/GrammarDetailPanel';
+import { GrammarCategorySubPageSlideOver, GrammarCategoryTab } from '../components/grammar/GrammarCategorySubPageSlideOver';
 
 // Data Imports
 import { GRAMMAR_POINTS_DATA } from '../data/grammar/grammarPointsData';
@@ -48,9 +49,8 @@ export const GrammarPage: React.FC<GrammarPageProps> = ({ showToast }) => {
   const [activeTab, setActiveTab] = useState<GrammarTab>('overview');
   const [selectedTopicId, setSelectedTopicId] = useState<string>('affirmative');
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState<boolean>(false);
-
-  // Selected Grammar Point Modal State
   const [selectedGrammarPoint, setSelectedGrammarPoint] = useState<GrammarPoint | null>(null);
+  const [activeCategorySubPage, setActiveCategorySubPage] = useState<GrammarCategoryTab | null>(null);
 
   const tabs: { id: GrammarTab; label: string; badge?: string }[] = [
     { id: 'overview', label: 'Tổng quan' },
@@ -72,6 +72,15 @@ export const GrammarPage: React.FC<GrammarPageProps> = ({ showToast }) => {
     const foundPoint = GRAMMAR_POINTS_DATA.find((p) => p.id === topic.id);
     if (foundPoint) {
       setSelectedGrammarPoint(foundPoint);
+    }
+  };
+
+  const handleTabClick = (tabId: GrammarTab) => {
+    if (tabId === 'overview') {
+      setActiveTab('overview');
+      setActiveCategorySubPage(null);
+    } else {
+      setActiveCategorySubPage(tabId as GrammarCategoryTab);
     }
   };
 
@@ -104,11 +113,11 @@ export const GrammarPage: React.FC<GrammarPageProps> = ({ showToast }) => {
           <div className="py-2 mb-2">
             <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
               {tabs.map((t) => {
-                const isActive = activeTab === t.id;
+                const isActive = activeTab === t.id && !activeCategorySubPage;
                 return (
                   <button
                     key={t.id}
-                    onClick={() => setActiveTab(t.id)}
+                    onClick={() => handleTabClick(t.id)}
                     type="button"
                     className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
                       isActive
@@ -248,6 +257,15 @@ export const GrammarPage: React.FC<GrammarPageProps> = ({ showToast }) => {
       <GrammarDetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
+      />
+
+      {/* Category Sub-Page Slide-Over Panel */}
+      <GrammarCategorySubPageSlideOver
+        isOpen={!!activeCategorySubPage}
+        onClose={() => setActiveCategorySubPage(null)}
+        categoryTab={activeCategorySubPage}
+        onSelectGrammarPoint={(gp) => setSelectedGrammarPoint(gp)}
+        showToast={showToast}
       />
     </div>
   );
