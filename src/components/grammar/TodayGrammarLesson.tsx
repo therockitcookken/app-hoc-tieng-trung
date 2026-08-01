@@ -60,115 +60,119 @@ export const TodayGrammarLesson: React.FC<TodayGrammarLessonProps> = ({
   }, []);
 
   return (
-    <div className="w-full px-4 py-1.5 relative z-10">
-      {/* Main Card */}
-      <div className="bg-white rounded-2xl p-4 shadow-[0_6px_20px_rgba(0,0,0,0.06)] border border-white/80 relative overflow-hidden">
-        {/* Header Badges */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center space-x-1.5">
-            <span className="bg-blue-100 text-[#1E52E8] font-extrabold text-[10px] px-2 py-0.5 rounded-md">
-              {lesson.hsk}
-            </span>
-            <span className={`font-bold text-[10px] px-2 py-0.5 rounded-md ${lesson.levelBg}`}>
-              {lesson.level}
-            </span>
+    <div className="w-full px-4 py-1.5 relative z-10 select-none">
+      {/* Main Double-Bezel Outer Shell */}
+      <div className="bg-white/95 rounded-[2rem] p-1.5 shadow-2xl border border-slate-200/80">
+        <div className="bg-white rounded-[calc(2rem-0.375rem)] p-4.5 border border-slate-100 relative overflow-hidden space-y-3.5">
+          {/* Header Badges */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <span className="eyebrow-pill bg-blue-500/10 text-blue-600 border-blue-500/20">
+                {lesson.hsk}
+              </span>
+              <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                {lesson.level}
+              </span>
+            </div>
+
+            <button
+              onClick={handleToggleBookmark}
+              type="button"
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-spring active:scale-90 cursor-pointer ${
+                isBookmarked ? 'bg-amber-100 text-amber-600 border border-amber-300' : 'bg-slate-100 text-slate-400 hover:text-slate-600'
+              }`}
+              aria-label="Lưu bài học"
+            >
+              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-500 text-amber-500' : ''}`} />
+            </button>
           </div>
 
-          <button
-            onClick={handleToggleBookmark}
-            type="button"
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-transform active:scale-90 cursor-pointer ${
-              isBookmarked ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-400 hover:text-slate-600'
-            }`}
-            aria-label="Lưu bài học"
-          >
-            <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-500 text-amber-500' : ''}`} />
-          </button>
-        </div>
+          {/* Lesson Title & Pinyin */}
+          <div>
+            <h2 className="text-xl font-black text-slate-900 tracking-tight">
+              {lesson.title}
+            </h2>
+            <div className="flex items-center space-x-2 mt-1">
+              <span className="text-sm font-black text-blue-600">
+                {lesson.pinyin}
+              </span>
+              <span className="text-xs text-slate-500 font-semibold">
+                ({lesson.meaning})
+              </span>
+            </div>
+          </div>
 
-        {/* Lesson Title & Pinyin */}
-        <h2 className="text-[17px] font-extrabold text-[#242424] tracking-tight">
-          {lesson.title}
-        </h2>
-        <div className="flex items-center space-x-2 mt-0.5">
-          <span className="text-[13px] font-bold text-[#1E52E8]">
-            {lesson.pinyin}
-          </span>
-          <span className="text-[12px] text-[#666666] font-medium">
-            ({lesson.meaning})
-          </span>
-        </div>
-
-        {/* Formula Box */}
-        <div className="mt-3 bg-[#EBF3FF] border border-[#D0E2FF] rounded-xl p-3">
-          <span className="text-[10px] font-extrabold text-[#1E52E8] uppercase tracking-wider block mb-1">
-            Công thức chuẩn:
-          </span>
-          <p className="text-[13.5px] font-extrabold text-[#1E52E8] font-mono leading-snug">
-            {lesson.formula}
-          </p>
-        </div>
-
-        {/* Example Sentence Box */}
-        <div className="mt-3 bg-[#FAFAFA] border border-slate-200/70 rounded-xl p-3 space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-[#777777] uppercase">
-              Ví dụ mẫu:
+          {/* Formula Box */}
+          <div className="bg-blue-50/80 border border-blue-200/80 rounded-2xl p-3.5 shadow-2xs">
+            <span className="text-[10px] font-black text-blue-700 uppercase tracking-widest block mb-1">
+              Công thức chuẩn:
             </span>
+            <p className="text-sm sm:text-base font-black text-blue-900 font-mono leading-snug">
+              {lesson.formula}
+            </p>
+          </div>
+
+          {/* Example Sentence Box */}
+          <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-3.5 space-y-1.5 shadow-2xs">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Ví dụ mẫu:
+              </span>
+              <button
+                onClick={handlePlayAudio}
+                type="button"
+                className="flex items-center space-x-1.5 text-xs text-blue-600 font-extrabold hover:text-blue-800 cursor-pointer transition-colors"
+              >
+                {isPlaying ? <VolumeX className="w-4 h-4 text-red-500 animate-pulse" /> : <Volume2 className="w-4 h-4" />}
+                <span>{isPlaying ? 'Dừng phát' : 'Nghe phát âm'}</span>
+              </button>
+            </div>
+            <p className="text-lg font-black text-slate-900 font-sans">
+              {lesson.exampleSentence}
+            </p>
+            <p className="text-xs font-extrabold text-blue-600">
+              {lesson.examplePinyin}
+            </p>
+            <p className="text-xs text-slate-600 font-medium">
+              Nghĩa: {lesson.exampleMeaning}
+            </p>
+          </div>
+
+          {/* Structure Analysis Collapsible */}
+          <GrammarStructureAnalysis
+            isExpanded={isAnalysisExpanded}
+            onToggleExpand={() => setIsAnalysisExpanded(!isAnalysisExpanded)}
+          />
+
+          {/* Action Buttons Row */}
+          <div className="grid grid-cols-3 gap-2 pt-1">
             <button
               onClick={handlePlayAudio}
               type="button"
-              className="flex items-center space-x-1 text-[10.5px] text-[#1E52E8] font-bold hover:underline cursor-pointer"
+              className="group bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold py-2.5 rounded-2xl border border-slate-200 flex items-center justify-center space-x-1.5 transition-spring active:scale-95 cursor-pointer shadow-2xs"
             >
-              {isPlaying ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
-              <span>{isPlaying ? 'Dừng phát' : 'Nghe phát âm'}</span>
+              {isPlaying ? <VolumeX className="w-4 h-4 text-red-500" /> : <Volume2 className="w-4 h-4 text-blue-600" />}
+              <span>{isPlaying ? 'Dừng' : 'Nghe câu'}</span>
+            </button>
+
+            <button
+              onClick={handleToggleBookmark}
+              type="button"
+              className="group bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold py-2.5 rounded-2xl border border-slate-200 flex items-center justify-center space-x-1.5 transition-spring active:scale-95 cursor-pointer shadow-2xs"
+            >
+              {isBookmarked ? <Check className="w-4 h-4 text-emerald-600 stroke-[3]" /> : <Bookmark className="w-4 h-4 text-amber-500" />}
+              <span>{isBookmarked ? 'Đã lưu' : 'Bookmark'}</span>
+            </button>
+
+            <button
+              onClick={onOpenDetailsModal}
+              type="button"
+              className="btn-3d-blue text-white text-xs font-black py-2.5 rounded-2xl flex items-center justify-center space-x-1.5 shadow-md cursor-pointer"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Học ngay</span>
             </button>
           </div>
-          <p className="text-[16px] font-extrabold text-[#242424] font-serif">
-            {lesson.exampleSentence}
-          </p>
-          <p className="text-[11.5px] font-semibold text-[#1E52E8]">
-            {lesson.examplePinyin}
-          </p>
-          <p className="text-[11px] text-[#555555] font-medium">
-            Nghĩa: {lesson.exampleMeaning}
-          </p>
-        </div>
-
-        {/* Structure Analysis Collapsible */}
-        <GrammarStructureAnalysis
-          isExpanded={isAnalysisExpanded}
-          onToggleExpand={() => setIsAnalysisExpanded(!isAnalysisExpanded)}
-        />
-
-        {/* Action Buttons Row */}
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          <button
-            onClick={handlePlayAudio}
-            type="button"
-            className="bg-slate-100 hover:bg-slate-200 text-[#242424] text-[11px] font-bold py-2 rounded-xl flex items-center justify-center space-x-1 transition-transform active:scale-95 cursor-pointer"
-          >
-            {isPlaying ? <VolumeX className="w-3.5 h-3.5 text-red-500" /> : <Volume2 className="w-3.5 h-3.5 text-[#1E52E8]" />}
-            <span>{isPlaying ? 'Dừng' : 'Nghe câu'}</span>
-          </button>
-
-          <button
-            onClick={handleToggleBookmark}
-            type="button"
-            className="bg-slate-100 hover:bg-slate-200 text-[#242424] text-[11px] font-bold py-2 rounded-xl flex items-center justify-center space-x-1 transition-transform active:scale-95 cursor-pointer"
-          >
-            {isBookmarked ? <Check className="w-3.5 h-3.5 text-green-600 stroke-[3]" /> : <Bookmark className="w-3.5 h-3.5 text-amber-500" />}
-            <span>{isBookmarked ? 'Đã lưu' : 'Bookmark'}</span>
-          </button>
-
-          <button
-            onClick={onOpenDetailsModal}
-            type="button"
-            className="bg-gradient-to-r from-[#2570F0] to-[#1E52E8] text-white text-[11px] font-bold py-2 rounded-xl flex items-center justify-center space-x-1 shadow-xs active:scale-95 transition-transform cursor-pointer"
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Học ngay</span>
-          </button>
         </div>
       </div>
     </div>
