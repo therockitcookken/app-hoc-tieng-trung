@@ -10,6 +10,7 @@ import { BottomNavigation } from '../components/BottomNavigation';
 import { FLASHCARD_DECKS_DATA } from '../data/flashcards/flashcardDecksData';
 import { FLASHCARD_CARDS_DATA } from '../data/flashcards/flashcardCardsData';
 import { FlashcardItem } from '../types/flashcards';
+import { FlashcardCategorySubPageSlideOver, FlashcardCategoryTab } from '../components/flashcards/FlashcardCategorySubPageSlideOver';
 import { Briefcase } from 'lucide-react';
 
 type FlashcardTab =
@@ -32,6 +33,7 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({ showToast }) => 
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<FlashcardTab>('overview');
   const [activeSessionCards, setActiveSessionCards] = useState<FlashcardItem[] | null>(null);
+  const [activeCategorySubPage, setActiveCategorySubPage] = useState<FlashcardCategoryTab | null>(null);
 
   const tabs: { id: FlashcardTab; label: string; badge?: string }[] = [
     { id: 'overview', label: 'Tổng quan' },
@@ -46,6 +48,15 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({ showToast }) => 
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleTabClick = (tabId: FlashcardTab) => {
+    if (tabId === 'overview') {
+      setActiveTab('overview');
+      setActiveCategorySubPage(null);
+    } else {
+      setActiveCategorySubPage(tabId as FlashcardCategoryTab);
+    }
   };
 
   const handleStartDeckStudy = (deckId: string) => {
@@ -108,11 +119,11 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({ showToast }) => 
               <div className="py-2 mb-3">
                 <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
                   {tabs.map((t) => {
-                    const isActive = activeTab === t.id;
+                    const isActive = activeTab === t.id && !activeCategorySubPage;
                     return (
                       <button
                         key={t.id}
-                        onClick={() => setActiveTab(t.id)}
+                        onClick={() => handleTabClick(t.id)}
                         type="button"
                         className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
                           isActive
@@ -206,6 +217,18 @@ export const FlashcardsPage: React.FC<FlashcardsPageProps> = ({ showToast }) => 
 
       {/* Bottom Navigation */}
       <BottomNavigation activeTab="flashcards" />
+
+      {/* Category Sub-Page Slide-Over Panel */}
+      <FlashcardCategorySubPageSlideOver
+        isOpen={!!activeCategorySubPage}
+        onClose={() => setActiveCategorySubPage(null)}
+        categoryTab={activeCategorySubPage}
+        onStartStudy={(cards) => {
+          setActiveCategorySubPage(null);
+          setActiveSessionCards(cards);
+        }}
+        showToast={showToast}
+      />
     </div>
   );
 };

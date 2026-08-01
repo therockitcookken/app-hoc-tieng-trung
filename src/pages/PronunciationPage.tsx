@@ -20,6 +20,7 @@ import { PronunciationSearch } from '../components/pronunciation/PronunciationSe
 import { FactoryPronunciationSection } from '../components/pronunciation/FactoryPronunciationSection';
 import { PronunciationExercise } from '../components/pronunciation/PronunciationExercise';
 import { PronunciationDetailPanel } from '../components/pronunciation/PronunciationDetailPanel';
+import { PronunciationCategorySubPageSlideOver, PronunciationCategoryTab } from '../components/pronunciation/PronunciationCategorySubPageSlideOver';
 
 // Data Imports
 import { INITIALS_DATA } from '../data/pronunciation/initialsData';
@@ -50,6 +51,7 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
 
   // Detail panel modal state
   const [detailData, setDetailData] = useState<{ type: 'initial' | 'final' | 'syllable'; item: any } | null>(null);
+  const [activeCategorySubPage, setActiveCategorySubPage] = useState<PronunciationCategoryTab | null>(null);
 
   const tabs: { id: PronunciationTab; label: string; badge?: string }[] = [
     { id: 'overview', label: 'Tổng quan' },
@@ -65,6 +67,15 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleTabClick = (tabId: PronunciationTab) => {
+    if (tabId === 'overview') {
+      setActiveTab('overview');
+      setActiveCategorySubPage(null);
+    } else {
+      setActiveCategorySubPage(tabId as PronunciationCategoryTab);
+    }
   };
 
   const handleNotificationClick = () => {
@@ -104,11 +115,11 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
           <div className="py-2 mb-2">
             <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
               {tabs.map((t) => {
-                const isActive = activeTab === t.id;
+                const isActive = activeTab === t.id && !activeCategorySubPage;
                 return (
                   <button
                     key={t.id}
-                    onClick={() => setActiveTab(t.id)}
+                    onClick={() => handleTabClick(t.id)}
                     type="button"
                     className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
                       isActive
@@ -287,6 +298,15 @@ export const PronunciationPage: React.FC<PronunciationPageProps> = ({ showToast 
       <PronunciationDetailsModal
         isOpen={isScoreModalOpen}
         onClose={() => setIsScoreModalOpen(false)}
+      />
+
+      {/* Category Sub-Page Slide-Over Panel */}
+      <PronunciationCategorySubPageSlideOver
+        isOpen={!!activeCategorySubPage}
+        onClose={() => setActiveCategorySubPage(null)}
+        categoryTab={activeCategorySubPage}
+        onSelectDetail={(type, item) => setDetailData({ type: type as any, item })}
+        showToast={showToast}
       />
     </div>
   );

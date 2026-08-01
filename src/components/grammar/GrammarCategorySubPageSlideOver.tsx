@@ -123,22 +123,22 @@ export const GrammarCategorySubPageSlideOver: React.FC<GrammarCategorySubPageSli
   if (!isOpen || !categoryTab) return null;
 
   return (
-    <div className="fixed inset-0 z-[95] bg-slate-950/80 backdrop-blur-xl flex justify-end animate-fade-in select-none">
-      {/* Slide-Over Panel Container */}
-      <div className="w-full max-w-4xl h-full bg-[#0F172A] text-slate-100 flex flex-col shadow-2xl border-l border-slate-700/60 overflow-hidden transform transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
+    <div className="fixed inset-0 z-[95] w-full h-full bg-slate-950/90 backdrop-blur-2xl flex justify-center animate-fade-in select-none">
+      {/* Full-Screen Sub-Page Container matching Main Screen */}
+      <div className="w-full h-full bg-[#0F172A] text-slate-100 flex flex-col shadow-2xl overflow-hidden transform transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)]">
         {/* Top Header Navigation Bar */}
-        <div className="p-4 sm:p-6 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md">
+        <div className="p-4 sm:p-6 bg-slate-900/95 border-b border-slate-800 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md">
           <div className="flex items-center space-x-3">
             <button
               onClick={onClose}
               type="button"
-              className="px-3.5 py-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-extrabold text-xs flex items-center space-x-2 border border-white/15 transition-spring active:scale-95 cursor-pointer shadow-md"
+              className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-black text-xs sm:text-sm flex items-center space-x-2 border border-white/15 transition-spring active:scale-95 cursor-pointer shadow-md"
             >
-              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+              <ArrowLeft className="w-4.5 h-4.5 stroke-[2.5]" />
               <span>Quay lại trang gốc</span>
             </button>
 
-            <span className="eyebrow-pill bg-blue-500/20 text-blue-400 border-blue-500/30 hidden sm:inline-flex">
+            <span className="eyebrow-pill bg-blue-500/20 text-blue-400 border-blue-500/30">
               {categoryMeta.badge}
             </span>
           </div>
@@ -146,15 +146,15 @@ export const GrammarCategorySubPageSlideOver: React.FC<GrammarCategorySubPageSli
           <button
             onClick={onClose}
             type="button"
-            className="w-9 h-9 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer transition-spring active:scale-90"
+            className="w-10 h-10 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer transition-spring active:scale-90 border border-slate-700"
             aria-label="Đóng"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Sub-Page Content Container */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 no-scrollbar pb-28">
+        {/* Sub-Page Content Area matching Main Screen footprint */}
+        <div className="flex-1 overflow-y-auto max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 no-scrollbar pb-32">
           {/* Sub-Page Hero Banner */}
           <div className="bezel-outer-shell bg-gradient-to-br from-slate-900 to-slate-950 border-slate-800">
             <div className="bezel-inner-core bg-slate-900 p-5 sm:p-6 border-slate-800 text-slate-100 space-y-2">

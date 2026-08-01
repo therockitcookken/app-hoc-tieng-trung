@@ -119,31 +119,43 @@ export const HomePage: React.FC<HomePageProps> = ({ showToast }) => {
         }}
       />
 
-      {/* Feature Interactive Modal */}
+      {/* Feature Interactive Sub-Page Overlay matching Main Screen */}
       {activeModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl text-center space-y-4 relative border border-red-100">
-            <button
-              onClick={() => setActiveModal(null)}
-              type="button"
-              className="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="w-12 h-12 rounded-full bg-red-50 text-[#EF3B32] mx-auto flex items-center justify-center">
-              <Sparkles className="w-6 h-6" />
+        <div className="fixed inset-0 z-[95] w-full h-full bg-slate-950/90 backdrop-blur-2xl flex justify-center animate-fade-in select-none">
+          <div className="w-full h-full bg-[#180506] text-slate-100 flex flex-col shadow-2xl overflow-hidden">
+            <div className="p-4 sm:p-6 bg-[#2B080A]/95 border-b border-red-900/80 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md">
+              <button
+                onClick={() => setActiveModal(null)}
+                type="button"
+                className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-black text-xs sm:text-sm flex items-center space-x-2 border border-white/15 transition-spring active:scale-95 cursor-pointer shadow-md"
+              >
+                <span>← Quay lại trang gốc</span>
+              </button>
+              <button
+                onClick={() => setActiveModal(null)}
+                type="button"
+                className="w-10 h-10 rounded-full bg-red-950 text-red-300 hover:text-white flex items-center justify-center cursor-pointer border border-red-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <h4 className="text-base font-bold text-slate-900">Thông báo</h4>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              {activeModal}
-            </p>
-            <button
-              onClick={() => setActiveModal(null)}
-              type="button"
-              className="w-full bg-gradient-to-r from-[#EF3B32] to-[#D92329] text-white text-xs sm:text-sm font-bold py-2.5 rounded-xl shadow-md active:scale-95 transition-transform cursor-pointer"
-            >
-              Bắt đầu trải nghiệm
-            </button>
+
+            <div className="flex-1 overflow-y-auto max-w-4xl w-full mx-auto p-6 space-y-6 no-scrollbar flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 rounded-full bg-red-500/20 border border-red-500/30 text-red-300 flex items-center justify-center">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-black text-white">Thông Tin Chi Tiết Chức Năng</h3>
+              <p className="text-sm text-slate-300 max-w-md font-medium leading-relaxed bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+                {activeModal}
+              </p>
+              <button
+                onClick={() => setActiveModal(null)}
+                type="button"
+                className="px-8 py-3 bg-gradient-to-r from-red-600 to-rose-600 text-white text-xs font-black rounded-2xl shadow-xl active:scale-95 transition-spring cursor-pointer"
+              >
+                Đã Hiểu & Quay Về Trang Chủ
+              </button>
+            </div>
           </div>
         </div>
       )}

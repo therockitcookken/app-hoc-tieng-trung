@@ -11,6 +11,7 @@ import { BottomNavigation } from '../components/BottomNavigation';
 import { QUIZ_QUESTIONS_DATA } from '../data/quiz/quizQuestionsData';
 import { QUIZ_COLLECTIONS_DATA } from '../data/quiz/quizCollectionsData';
 import { QuizQuestion } from '../types/quiz';
+import { QuizCategorySubPageSlideOver, QuizCategoryTab } from '../components/quiz/QuizCategorySubPageSlideOver';
 import { Briefcase } from 'lucide-react';
 
 type QuizTab =
@@ -33,6 +34,7 @@ export const QuizPage: React.FC<QuizPageProps> = ({ showToast }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<QuizTab>('overview');
   const [activeSessionQuestions, setActiveSessionQuestions] = useState<QuizQuestion[] | null>(null);
+  const [activeCategorySubPage, setActiveCategorySubPage] = useState<QuizCategoryTab | null>(null);
 
   const tabs: { id: QuizTab; label: string; badge?: string }[] = [
     { id: 'overview', label: 'Tổng quan' },
@@ -48,6 +50,15 @@ export const QuizPage: React.FC<QuizPageProps> = ({ showToast }) => {
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleTabClick = (tabId: QuizTab) => {
+    if (tabId === 'overview') {
+      setActiveTab('overview');
+      setActiveCategorySubPage(null);
+    } else {
+      setActiveCategorySubPage(tabId as any);
+    }
   };
 
   const handleStartCollection = (collectionId: string) => {
@@ -119,11 +130,11 @@ export const QuizPage: React.FC<QuizPageProps> = ({ showToast }) => {
               <div className="py-2 mb-3">
                 <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1">
                   {tabs.map((t) => {
-                    const isActive = activeTab === t.id;
+                    const isActive = activeTab === t.id && !activeCategorySubPage;
                     return (
                       <button
                         key={t.id}
-                        onClick={() => setActiveTab(t.id)}
+                        onClick={() => handleTabClick(t.id)}
                         type="button"
                         className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1 ${
                           isActive
@@ -229,6 +240,18 @@ export const QuizPage: React.FC<QuizPageProps> = ({ showToast }) => {
 
       {/* Bottom Navigation */}
       <BottomNavigation activeTab="quiz" />
+
+      {/* Category Sub-Page Slide-Over Panel */}
+      <QuizCategorySubPageSlideOver
+        isOpen={!!activeCategorySubPage}
+        onClose={() => setActiveCategorySubPage(null)}
+        categoryTab={activeCategorySubPage}
+        onStartQuiz={(questions) => {
+          setActiveCategorySubPage(null);
+          setActiveSessionQuestions(questions);
+        }}
+        showToast={showToast}
+      />
     </div>
   );
 };
