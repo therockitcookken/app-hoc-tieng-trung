@@ -89,7 +89,7 @@ export const EssentialCommunicationSection: React.FC<EssentialCommunicationSecti
             </div>
 
             <button
-              onClick={() => handlePlayAudio(phrase.audioText)}
+              onClick={() => handlePlayAudio(phrase.audioText || phrase.chinese)}
               type="button"
               className="bg-white p-2 rounded-full border border-slate-200 text-slate-600 hover:text-emerald-600 shadow-2xs active:scale-95 transition-transform flex-shrink-0 cursor-pointer"
             >

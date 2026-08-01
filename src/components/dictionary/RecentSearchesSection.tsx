@@ -56,13 +56,14 @@ export const RecentSearchesSection: React.FC<RecentSearchesSectionProps> = ({
             </div>
 
             <div className="mt-2 flex items-center justify-end">
-              <span
+              <button
                 onClick={(e) => handlePlaySound(e, item.simplified)}
-                className="p-1 rounded-full text-[#28B849] hover:bg-[#E0F2E3] transition-colors"
-                title="Nghe phát âm"
+                type="button"
+                className="p-1 rounded-full text-[#28B849] hover:bg-[#E0F2E3] transition-colors cursor-pointer"
+                aria-label="Nghe phát âm"
               >
                 <Volume2 className="w-3.5 h-3.5 fill-current stroke-[1.5]" />
-              </span>
+              </button>
             </div>
           </button>
         ))}

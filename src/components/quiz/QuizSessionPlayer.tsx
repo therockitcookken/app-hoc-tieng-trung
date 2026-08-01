@@ -184,9 +184,9 @@ export const QuizSessionPlayer: React.FC<QuizSessionPlayerProps> = ({
             {currentQ.questionChinese}
           </h3>
 
-          {currentQ.audioText && (
+          {(currentQ.audioText || currentQ.questionChinese) && (
             <button
-              onClick={() => handlePlayAudio(currentQ.audioText!)}
+              onClick={() => handlePlayAudio(currentQ.audioText || currentQ.questionChinese)}
               type="button"
               className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 p-2 rounded-full cursor-pointer flex-shrink-0 active:scale-95 transition-transform"
             >
